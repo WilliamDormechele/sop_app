@@ -1,6 +1,7 @@
 # -----------------------------
 # 📦 Imports and Configuration
 # -----------------------------
+from flask import session, redirect, url_for, flash
 from emails import build_sop_assignment_email
 from urllib.parse import urlencode  # make sure this is at the top if not already
 from sqlalchemy import func, or_
@@ -15,7 +16,7 @@ import os
 import pandas as pd
 from flask_mail import Mail, Message
 from sqlalchemy import func, or_, extract
-from markupsafe import Markup  
+from markupsafe import Markup
 import json
 from datetime import timedelta
 from flask_migrate import Migrate
@@ -44,11 +45,11 @@ from emails import (
 )
 
 
-
 def generate_random_password(length=10):
     """Generate a random password containing letters and digits."""
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
+
 
 def send_amendment_email(subject, body, recipients):
     msg = Message(
@@ -64,8 +65,11 @@ def enable_sqlite_foreign_key_constraint(dbapi_connection, connection_record):
         cursor.execute("PRAGMA foreign_keys=ON;")
         cursor.close()
 
+
 # ✅ Allowed file extensions for uploads
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -130,7 +134,6 @@ class User(db.Model):
     must_change = db.Column(db.Boolean, default=True)
 
 
-
 # 📄 SOP Model with Amendments
 class SOP(db.Model):
     __tablename__ = 'sop'
@@ -145,7 +148,7 @@ class SOP(db.Model):
     status = db.Column(db.String(20), default='draft')  # 'draft' or 'approved'
     approved_by = db.Column(db.String(100))
     date_approved = db.Column(db.DateTime)
-    
+
     deleted = db.Column(db.Boolean, default=False)
 
     audit_logs = db.relationship(
@@ -158,7 +161,6 @@ class SOP(db.Model):
         'ReadLog', backref='sop', cascade="all, delete-orphan")
     audit_logs = db.relationship(
         'AuditLog', backref='sop', cascade="all, delete-orphan")
-    
 
 
 # 📚 Read Log Model
@@ -168,8 +170,8 @@ class ReadLog(db.Model):
     sop_id = db.Column(db.Integer, db.ForeignKey('sop.id'), nullable=False)
     username = db.Column(db.String(80), nullable=False)
     date_read = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    
+
+
 # 📝 Audit Log Model
 class AuditLog(db.Model):
     __tablename__ = 'audit_log'
@@ -182,16 +184,19 @@ class AuditLog(db.Model):
     notes = db.Column(db.Text)
 
 # SOP Assignment Table
+
+
 class SOPAssignment(db.Model):
     __tablename__ = 'sop_assignment'
     id = db.Column(db.Integer, primary_key=True)
     sop_id = db.Column(db.Integer, db.ForeignKey('sop.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='CASCADE'), nullable=False)
     acknowledged = db.Column(db.Boolean, default=False)
 
     sop = db.relationship('SOP', backref='assignments')
-    user = db.relationship('User', backref=db.backref('assignments', cascade="all, delete-orphan"))
-
+    user = db.relationship('User', backref=db.backref(
+        'assignments', cascade="all, delete-orphan"))
 
 
 # 📑 Amendment Model
@@ -261,10 +266,11 @@ class APIKey(db.Model):
 class Setting(db.Model):
     __tablename__ = 'setting'
     __table_args__ = {'extend_existing': True}  # 🛠 Important
-    
+
     id = db.Column(db.Integer, primary_key=True)
     portal_name = db.Column(db.String(150), default='NHRC SOP Portal')
-    admin_email = db.Column(db.String(150), default='williamdormechele@gmail.com')
+    admin_email = db.Column(
+        db.String(150), default='williamdormechele@gmail.com')
     logo_filename = db.Column(db.String(150), nullable=True)
     theme_color = db.Column(db.String(50), default='Blue')
     enable_registration = db.Column(db.Boolean, default=True)
@@ -287,10 +293,9 @@ class SupportTicket(db.Model):
 # -----------------------------
 # 🔐 Login Decorators
 
-from functools import wraps
-from flask import session, redirect, url_for, flash
 
 # ✅ Login required for any user (staff, admin, etc.)
+
 def login_required(role=None):
     def inner_decorator(fn):
         @wraps(fn)
@@ -314,6 +319,8 @@ def login_required(role=None):
     return inner_decorator
 
 # ✅ Admin only shortcut
+
+
 def admin_required(fn):
     return login_required(role='admin')(fn)
 
@@ -342,6 +349,8 @@ def login_required(role=None):
     return decorator
 
 # 🔒 ADMIN REQUIRED DECORATOR (Shortcut)
+
+
 def admin_required(fn):
     return login_required(role='admin')(fn)
 
@@ -361,7 +370,6 @@ def admin_required(fn):
 def inject_settings():
     settings = Setting.query.first()
     return dict(settings=settings)
-
 
 
 # -----------------------------
@@ -426,7 +434,6 @@ def register():
     return render_template('register.html')
 
 
-
 # 🔑 Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -458,7 +465,6 @@ def login():
             flash('Invalid credentials', 'error')
 
     return render_template('login.html')
-
 
 
 # 🔓 Logout
@@ -655,7 +661,7 @@ def documents_page():
 
     # 📄 Results
     results = query.order_by(SOP.date_uploaded.desc()).all()
-    
+
     # 🆕 Get draft SOPs
     draft_sops = SOP.query.filter_by(status='draft', deleted=False).all()
 
@@ -679,7 +685,7 @@ def documents_page():
         owner_options=owner_options,
         approver_options=approver_options,
         copy_holders=copy_holders,
-        now=now, 
+        now=now,
         draft_sops=draft_sops  # ✅ Pass draft_sops!
     )
 
@@ -859,7 +865,6 @@ def list_sops():
     )
 
 
-
 # Audit Log
 @app.route('/audit-log')
 @login_required(role=['admin', 'hod'])
@@ -951,7 +956,6 @@ def bulk_mark_as_read():
     return redirect(url_for('list_sops'))
 
 
-
 # SOP acknowledgment
 @app.route('/acknowledge/<int:sop_id>', methods=['POST'])
 @login_required()
@@ -985,6 +989,8 @@ def dashboard():
     )
 
 # 📊 AJAX ENDPOINT FOR CHART DATA
+
+
 @app.route('/dashboard_data')
 @login_required()
 def dashboard_data():
@@ -1073,9 +1079,6 @@ def inject_now():
     }
 
 
-
-
-
 # My Actions
 @app.route('/my_actions')
 @login_required()
@@ -1097,7 +1100,7 @@ def get_my_actions():
         "id": sop.id,
         "title": sop.filename
     } for sop in sops])
-    
+
 
 # Assignment Route
 # @app.route('/assign', methods=['POST'])
@@ -1142,7 +1145,6 @@ def assign_sop():
     db.session.commit()
     flash("SOP assigned successfully!", "success")  # ✅ Flash message
     return redirect(url_for('list_sops'))
-
 
 
 # Assign Page - GET route: Show Assign SOP Page
@@ -1215,7 +1217,6 @@ def amendments_page():
     amendments = Amendment.query.order_by(Amendment.date_raised.desc()).all()
     sops = SOP.query.filter_by(deleted=False).all()
     return render_template("amendments.html", amendments=amendments, sops=sops, now=datetime.utcnow())
-
 
 
 # 🧾 View & Manage Amendments (Stage 2)
@@ -1308,8 +1309,6 @@ def inject_pending_amendments():
     return {'pending_amendments_count': count}
 
 
-
-
 # 🔧 Route to raise or edit SOP amendments
 @app.route('/manage_amendment/<int:amendment_id>', methods=['GET', 'POST'])
 @login_required()
@@ -1372,7 +1371,6 @@ def manage_amendment(amendment_id=None):
         return redirect(url_for('amendments_page'))
 
     return render_template('manage_amendment.html', sops=sops)
-
 
 
 # ✅ Close Amendment
@@ -1478,7 +1476,6 @@ def daysago(date):
         return f'{days} days ago'
 
 
-
 # Edit Amendment
 @app.route('/amendment/edit/<int:amendment_id>', methods=['GET', 'POST'])
 @login_required()
@@ -1501,8 +1498,6 @@ def edit_amendment(amendment_id):
         return redirect(url_for('amendments_page'))
 
     return render_template('edit_amendment.html', amendment=amendment)
-
-
 
 
 # Admin Dashboard
@@ -1611,12 +1606,6 @@ def reset_user_password(user_id):
         return redirect(url_for('admin_manage_users'))
 
 
-
-
-
-
-
-
 # Suspend/Activate User
 @app.route('/admin/users/suspend/<int:user_id>')
 @login_required(role='admin')
@@ -1628,6 +1617,8 @@ def suspend_user(user_id):
     return redirect(url_for('admin_manage_users'))
 
 # Promote User Role
+
+
 @app.route('/admin/users/promote/<int:user_id>')
 @login_required(role='admin')
 def promote_user(user_id):
@@ -1641,6 +1632,8 @@ def promote_user(user_id):
     return redirect(url_for('admin_manage_users'))
 
 # Soft Delete User
+
+
 @app.route('/admin/users/delete/<int:user_id>')
 @login_required(role='admin')
 def delete_user(user_id):
@@ -1697,9 +1690,9 @@ def admin_send_notification():
         if method in ['email', 'both']:
             for user in users:
                 send_email(
-                    to=user.email,
+                    to_email=user.email,
                     subject=f"NHRC SOP Portal: {title}",
-                    body=f"Dear {user.username},\n\n{message}\n\nRegards,\nNHRC SOP Portal Team"
+                    html_body=f"Dear {user.username},<br><br>{message}<br><br>Regards,<br>NHRC SOP Portal Team"
                 )
 
         if method in ['popup', 'both']:
@@ -1749,7 +1742,6 @@ def admin_api_keys():
 
     api_keys = APIKey.query.order_by(APIKey.created_at.desc()).all()
     return render_template('admin/api_keys.html', api_keys=api_keys)
-
 
 
 @app.route('/admin/api-keys/disable/<int:key_id>', methods=['POST'])
@@ -1827,12 +1819,16 @@ def admin_settings():
     return render_template('admin/settings.html', settings=settings)
 
 # 📋 Help Page Route
+
+
 @app.route('/help')
 @login_required()
 def help_page():
     return render_template('help.html')
 
 # 📜 Documentation Page Route
+
+
 @app.route('/documentation')
 @login_required()
 def documentation_page():
@@ -1850,7 +1846,8 @@ def submit_support_ticket():
         flash('Please fill in all fields.', 'error')
         return redirect(url_for('help_page'))
 
-    ticket = SupportTicket(name=name, email=email, subject=subject, message=message)
+    ticket = SupportTicket(name=name, email=email,
+                           subject=subject, message=message)
     db.session.add(ticket)
     db.session.flush()
 
@@ -1895,8 +1892,6 @@ NHRC SOP Portal Team
     return redirect(url_for('help_page'))
 
 
-
-
 @app.route('/admin/support-tickets/resolve/<int:ticket_id>', methods=['POST'])
 @login_required(role='admin')
 def resolve_support_ticket(ticket_id):
@@ -1905,8 +1900,6 @@ def resolve_support_ticket(ticket_id):
     db.session.commit()
     flash('✅ Ticket marked as resolved.', 'success')
     return redirect(url_for('view_support_tickets'))
-
-
 
 
 # 📩 Support Tickets (Admin Panel)
@@ -1973,7 +1966,6 @@ def reply_ticket(ticket_id):
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
-
 
 
 # ✉️ Reply to a Support Ticket (AJAX POST from reply modal)
@@ -2161,7 +2153,7 @@ def bulk_action_users():
 
             # Send reset email
             html_body = build_password_reset_email(user, random_password)
-            
+
             send_email(
                 user.email,
                 "🔒 Password Reset Notification",
@@ -2289,20 +2281,18 @@ def test_email_welcome():
     return redirect(url_for('admin_dashboard'))
 
 
-
 # -----------------------------
 # ▶️ Run App
 # -----------------------------
 # TEMPORARY: Create missing tables (like support_ticket)
 # with app.app_context():
-#     db.create_all()  
+#     db.create_all()
 
 # if __name__ == "__main__":
 #     with app.app_context():
 #         db.create_all()
 #     app.run(debug=True)
 
-    
 if __name__ == '__main__':
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
