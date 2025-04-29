@@ -1,0 +1,94 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Settings | NHRC SOP Portal{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-card">
+  <h3>⚙️ Portal Settings</h3>
+  <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+
+    <!-- Portal Name -->
+    <div class="mb-3">
+      <label for="portal_name" class="form-label">Portal Name</label>
+      <input type="text" class="form-control" id="portal_name" name="portal_name" value="{{ settings.portal_name if settings else '' }}" required>
+    </div>
+
+    <!-- Admin Email -->
+    <div class="mb-3">
+      <label for="admin_email" class="form-label">Admin Email</label>
+      <input type="email" class="form-control" id="admin_email" name="admin_email" value="{{ settings.admin_email if settings else '' }}" required>
+    </div>
+
+    <!-- Portal Logo Upload -->
+    <div class="mb-3">
+      <label for="logo_upload" class="form-label">Portal Logo</label>
+      {% if settings and settings.logo_filename %}
+      <div class="mb-2">
+        <img id="logoPreview" src="{{ url_for('static', filename='uploads/' + settings.logo_filename) }}" alt="Current Logo" style="height: 80px; object-fit: contain;">
+      </div>
+      {% else %}
+      <div class="mb-2">
+        <img id="logoPreview" src="{{ url_for('static', filename='default_logo.png') }}" alt="Logo Preview" style="height: 80px; object-fit: contain;">
+      </div>
+      {% endif %}
+      <input type="file" class="form-control" id="logo_upload" name="logo_upload" onchange="previewLogo(this)">
+    </div>
+
+    <!-- Theme Color -->
+    <div class="mb-3">
+      <label for="theme_color" class="form-label">Theme Color</label>
+      <select class="form-select" id="theme_color" name="theme_color" onchange="updatePreviewColor()" required>
+        <option value="Blue" {% if settings and settings.theme_color == 'Blue' %}selected{% endif %}>Blue</option>
+        <option value="Green" {% if settings and settings.theme_color == 'Green' %}selected{% endif %}>Green</option>
+        <option value="Red" {% if settings and settings.theme_color == 'Red' %}selected{% endif %}>Red</option>
+        <option value="Dark" {% if settings and settings.theme_color == 'Dark' %}selected{% endif %}>Dark</option>
+      </select>
+    </div>
+
+    <!-- Enable Registration -->
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="enable_registration" name="enable_registration" {% if settings and settings.enable_registration %}checked{% endif %}>
+      <label class="form-check-label" for="enable_registration">
+        Enable Public Registration
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Save Settings</button>
+
+    <!-- Live Color Preview Box -->
+    <div id="colorPreview" class="mt-4 p-3 text-white text-center rounded" style="background-color: #1c4ca4;">
+      Color Preview
+    </div>
+  </form>
+</div>
+
+<script>
+// Preview selected logo immediately
+function previewLogo(input) {
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById('logoPreview').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Update color preview box based on selection
+function updatePreviewColor() {
+  const color = document.getElementById('theme_color').value;
+  const preview = document.getElementById('colorPreview');
+
+  const colorMap = {
+    "Blue": "#1c4ca4",
+    "Green": "#28a745",
+    "Red": "#dc3545",
+    "Dark": "#343a40"
+  };
+
+  preview.style.backgroundColor = colorMap[color] || '#1c4ca4';
+}
+</script>
+
+{% endblock %}

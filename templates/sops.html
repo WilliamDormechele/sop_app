@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block title %}SOPs{% endblock %}
+
+{% block content %}
+
+<div class="text-center mt-4 mb-3">
+  <h2 style="color: #2563eb;">📄 Standard Operating Procedures (SOPs)</h2>
+</div>
+
+<hr>
+<h3>📝 Audit Logs</h3>
+<p>
+  <a href="{{ url_for('audit_log') }}">📋 View Audit Logs</a> |
+  <a href="{{ url_for('download_audit_logs') }}">📥 Download Excel</a>
+</p>
+
+{# <p style="margin-top: 20px;">
+  <a href="{{ url_for('home') }}">← Back to Home</a>
+</p>  #}
+<hr>
+
+<!-- 🔍 Filter & Search -->
+<style>
+  .sop-filter-form {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); /* 8 fields */
+    gap: 10px;
+    padding: 20px;
+    align-items: center;
+  }
+
+  .sop-filter-form .form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: none;
+    background: none;
+    border: none;
+  }
+
+  .sop-filter-form label {
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    height: 20px; /* uniform height for labels */
+  }
+
+  .sop-filter-form input,
+  .sop-filter-form select {
+    height: 38px;
+    font-size: 0.9rem;
+  }
+
+/*drop down arrows */
+  .sop-filter-form select {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  -moz-appearance: auto !important;
+  background-color: #fff;
+  background-image: none; /* Ensure default icon is used */
+}
+
+
+  .sop-filter-form button {
+    height: 38px;
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .card {
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    padding-left: 80px; /* 👈 Add this line */
+  }
+
+  .sop-filter-form {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* 7 filters + button = 8 */
+  gap: 10px;
+  padding: 20px;
+  align-items: center;
+}
+</style>
+
+<div class="card">
+  <form method="get" action="{{ url_for('list_sops') }}" class="sop-filter-form">
+
+    <div class="form-group">
+      <label>Search</label>
+      <input type="text" class="form-control" name="search" placeholder="🔍 Search..." value="{{ search_query or '' }}">
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select class="form-select" name="category">
+        <option value="All">All</option>
+        {% for cat in categories %}
+          <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Start</label>
+      <input type="date" class="form-control" name="start_date" value="{{ start_date or '' }}">
+    </div>
+
+    <div class="form-group">
+      <label>End</label>
+      <input type="date" class="form-control" name="end_date" value="{{ end_date or '' }}">
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select class="form-select" name="status">
+        <option value="">All</option>
+        {% for status in status_options %}
+          <option value="{{ status }}">{{ status }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Owner</label>
+      <select class="form-select" name="owner">
+        <option value="">All</option>
+        {% for owner in owner_options %}
+          <option value="{{ owner }}">{{ owner }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Approver</label>
+      <select class="form-select" name="approver">
+        <option value="">All</option>
+        {% for approver in approver_options %}
+          <option value="{{ approver }}">{{ approver }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+
+<div class="form-group d-flex align-items-end">
+  <button type="submit" class="btn btn-primary w-100" style="height: 38px; min-width: 120px;">🔍 Filter</button>
+</div>
+
+
+  </form>
+</div>
+
+<!-- ✅ Button shown below filter -->
+<form method="post" action="{{ url_for('bulk_mark_as_read') }}">
+  {% if files %}
+    <div style="margin: 10px 20px;">
+      <button type="submit" class="read-button btn btn-primary">✅ Mark selected as Read</button>
+    </div>
+  {% endif %}
+
+
+<!-- ✅ SOP List & Bulk Mark as Read -->
+<form method="post" action="{{ url_for('bulk_mark_as_read') }}">
+  {% if files %}
+  {% for file in files %}
+    <div class="sop-card" id="sop-{{ file.id }}">
+      <label>
+        <input type="checkbox" name="sop_ids" value="{{ file.id }}">
+        <strong>{{ file.filename }}</strong>
+      </label>
+      – {{ file.category }} / {{ file.subcategory or 'N/A' }}
+      – Version: {{ file.version or '1.0' }}
+      – Status:
+      {% if file.status == 'approved' %}
+        <span style="color: green;">✔️ Approved</span>
+      {% else %}
+        <span style="color: orange;">🕒 Draft</span>
+        {% if session['role'] in ['admin', 'hod'] %}
+          | <a href="{{ url_for('approve_sop', sop_id=file.id) }}" onclick="return confirm('Approve this SOP?')">✅ Approve</a>
+        {% endif %}
+      {% endif %}
+
+      <br>
+      Uploaded by: {{ file.uploaded_by }} on {{ file.date_uploaded.strftime('%Y-%m-%d') }}
+      {% if file.approved_by %}
+        | Approved by: {{ file.approved_by }} on {{ file.date_approved.strftime('%Y-%m-%d') }}
+      {% endif %}
+
+      <br>
+<a href="{{ url_for('download_file', filename=file.filename) }}">📥 Download</a> |
+<a href="{{ url_for('version_history', filename=file.filename) }}">📜 Version History</a>
+{% if session['role'] in ['admin', 'hod'] %}
+  | <a href="{{ url_for('assign_page', sop_id=file.id) }}" class="btn btn-sm btn-outline-primary">Assign</a>
+{% endif %}
+
+      <!-- ✅ Read Status -->
+      {% set ns = namespace(read=False) %}
+      {% for log in file.read_logs %}
+        {% if log.username == session['username'] %}
+          {% set ns.read = True %}
+        {% endif %}
+      {% endfor %}
+      {% if ns.read %}
+        <span style="color: green;">✅ Read</span>
+      {% else %}
+        <span style="color: red;">❌ Unread</span>
+      {% endif %}
+
+      <!-- 🗑 Delete Button (no nested form) -->
+{% if session['role'] in ['admin', 'hod'] %}
+  <button type="submit"
+          formaction="{{ url_for('delete_sop', sop_id=file.id) }}"
+          formmethod="post"
+          class="delete-button"
+          onclick="return confirm('Delete {{ file.filename }}?')">
+    🗑 Delete
+  </button>
+{% endif %}
+    </div>
+  {% endfor %}
+
+  {#}
+  {% if files %}
+    <button type="submit" class="read-button">✅ Mark selected as Read</button>
+  {% else %}
+    <p>No SOPs found for the selected filters.</p>
+  {% endif %}
+  #}
+
+  {% else %}
+    {% if search_query %}
+      <p style="color: red;">No SOPs found for: <strong>{{ search_query }}</strong></p>
+    {% else %}
+      <p>No SOPs found for the selected filters.</p>
+    {% endif %}
+  {% endif %}
+</form>
+
+
+{% if pagination.pages > 1 %}
+<nav aria-label="SOP pagination">
+  <ul class="pagination justify-content-center mt-4">
+
+    <!-- Previous Button -->
+    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+      <a class="page-link"
+         href="{{ url_for('list_sops') }}?{{ base_query_string }}&page={{ pagination.prev_num }}"
+         aria-label="Previous">
+        &laquo;
+      </a>
+    </li>
+
+    <!-- Page Numbers -->
+    {% for p in range(1, pagination.pages + 1) %}
+      <li class="page-item {% if p == pagination.page %}active{% endif %}">
+        <a class="page-link"
+           href="{{ url_for('list_sops') }}?{{ base_query_string }}&page={{ p }}">
+          {{ p }}
+        </a>
+      </li>
+    {% endfor %}
+
+    <!-- Next Button -->
+    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+      <a class="page-link"
+         href="{{ url_for('list_sops') }}?{{ base_query_string }}&page={{ pagination.next_num }}"
+         aria-label="Next">
+        &raquo;
+      </a>
+    </li>
+
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

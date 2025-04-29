@@ -1,0 +1,51 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="d-flex justify-content-center">
+  <div class="admin-card p-4" style="width: 600px;">
+
+    <h2 class="text-center mb-4">📣 Send Notification</h2>
+    <p class="text-center text-muted mb-4">Quickly send an Email and/or Popup notification to selected users.</p>
+
+    <form method="POST" action="{{ url_for('admin_send_notification') }}">
+      <div class="mb-4">
+        <label for="title" class="form-label fw-bold">🔖 Notification Title:</label>
+        <input type="text" id="title" name="title" class="form-control" placeholder="e.g. New SOP Uploaded" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="message" class="form-label fw-bold">📝 Notification Message:</label>
+        <textarea id="message" name="message" class="form-control" rows="4" placeholder="Write your message here..." required></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label for="target" class="form-label fw-bold">🎯 Target Audience:</label>
+        <select id="target" name="target" class="form-select" required>
+          <option value="all">All Users</option>
+          <option value="admin">Admins Only</option>
+          <option value="hod">HODs Only</option>
+          <option value="user">Users Only</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label for="method" class="form-label fw-bold">✉️ Send Method:</label>
+        <select id="method" name="method" class="form-select" required>
+          <option value="email">Email Only</option>
+          <option value="popup">Popup Only</option>
+          <option value="both">Both Email and Popup</option>
+        </select>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-success btn-lg px-5">🚀 Send Notification</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

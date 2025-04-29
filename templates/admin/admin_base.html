@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel | NHRC SOP Portal{% endblock %}
+
+{% block content %}
+
+<style>
+  .admin-header {
+    background-color: #1c4ca4;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .admin-navbar {
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .admin-navbar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .admin-navbar a:hover {
+    color: #1c4ca4;
+  }
+
+  .admin-content {
+    padding: 20px;
+  }
+
+  .admin-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .admin-card h3 {
+    margin-bottom: 10px;
+  }
+
+  .admin-footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+  }
+</style>
+
+<style>
+  /* --- Existing styles --- */
+  
+  .admin-navbar a.active {
+    color: #1c4ca4;
+    border-bottom: 2px solid #1c4ca4;
+    padding-bottom: 2px;
+    transition: all 0.3s ease-in-out; /* 👈 Smooth transition */
+  }
+
+  /* Add hover effect too */
+  .admin-navbar a:hover {
+    color: #1c4ca4;
+    transform: translateY(-2px); /* 👈 Slight lift on hover */
+    transition: all 0.3s ease-in-out;
+  }
+</style>
+
+
+<!-- Admin Header -->
+<div class="admin-header">
+  <h1>🔐 NHRC SOP Portal Admin Panel</h1>
+  <p>Manage users, SOPs, logs, settings, and more</p>
+</div>
+
+
+<div class="admin-navbar">
+  <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
+  <a href="{{ url_for('admin_manage_users') }}" class="{% if request.endpoint == 'admin_manage_users' %}active{% endif %}">Manage-Users</a>
+  <a href="{{ url_for('admin_logs') }}" class="{% if request.endpoint == 'admin_logs' %}active{% endif %}">Logs</a>
+  <a href="{{ url_for('register') }}" class="{% if request.endpoint == 'register' %}active{% endif %}">Register-User</a>
+  <a href="{{ url_for('admin_send_notification') }}" class="{% if request.endpoint == 'admin_send_notification' %}active{% endif %}">Notifications</a>
+  <a href="{{ url_for('admin_api_keys') }}" class="{% if request.endpoint == 'admin_api_keys' %}active{% endif %}">API Keys</a>
+  <a href="{{ url_for('admin_settings') }}" class="{% if request.endpoint == 'admin_settings' %}active{% endif %}">Settings</a>
+  <a href="{{ url_for('support_tickets') }}" class="{% if request.endpoint == 'support_tickets' %}active{% endif %}">Support-Tickets</a>
+</div>
+
+
+
+
+
+<!-- Admin Content -->
+<div class="admin-content">
+  {% block admin_content %}{% endblock %}
+</div>
+
+<div class="admin-footer">
+  © {{ current_year }} Navrongo Health Research Centre - Admin Panel
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,146 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Support Tickets | NHRC SOP Portal{% endblock %}
+
+{% block admin_content %}
+<div class="admin-card">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>📨 Support Tickets</h3>
+    <div>
+      <a href="{{ url_for('export_tickets') }}" class="btn btn-success btn-sm me-2">🗂️ Export to Excel</a>
+      <button class="btn btn-secondary btn-sm" onclick="refreshTickets()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <select id="status-filter" class="form-select form-select-sm" style="width:200px;" onchange="filterTickets()">
+      <option value="">All Tickets</option>
+      <option value="Open">Open ({{ open_count }})</option>
+      <option value="Closed">Closed ({{ closed_count }})</option>
+    </select>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle" id="tickets-table">
+      <thead class="table-dark text-center">
+        <tr>
+          <th>Ticket ID</th>
+          <th>Subject</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Submitted</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in tickets.items %}
+        <tr id="ticket-row-{{ ticket.id }}" class="{% if ticket.status == 'Open' %}table-warning{% endif %}">
+          <td>{{ ticket.ticket_id }}</td>
+          <td>{{ ticket.subject }}</td>
+          <td>{{ ticket.email }}</td>
+          <td>
+            {% if ticket.status == 'Open' %}
+              <span class="badge bg-success">Open</span>
+            {% else %}
+              <span class="badge bg-secondary">Closed</span>
+            {% endif %}
+          </td>
+          <td>{{ ticket.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td class="text-center">
+
+            <form action="{{ url_for('reply_ticket_page', ticket_id=ticket.id) }}" method="GET" style="display:inline;">
+            <button type="submit" class="btn btn-primary btn-sm mb-1">✉️ Reply</button>
+            </form>
+
+            <form action="{{ url_for('delete_support_ticket', ticket_id=ticket.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+              <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Reply Modal -->
+<div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="replyForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="replyModalLabel">Reply to Ticket</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="ticketId" name="ticket_id">
+          <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <input type="text" class="form-control" id="ticketSubject" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reply Message</label>
+            <textarea class="form-control" id="replyMessage" name="reply_message" rows="5" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Send Reply</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openReplyModal(ticketId, subject) {
+  document.getElementById('ticketId').value = ticketId;
+  document.getElementById('ticketSubject').value = subject;
+  var replyModal = new bootstrap.Modal(document.getElementById('replyModal'));
+  replyModal.show();
+}
+
+document.getElementById('replyForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  var ticketId = document.getElementById('ticketId').value;
+  var replyMessage = document.getElementById('replyMessage').value;
+
+  fetch(`/reply_ticket/${ticketId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `reply_message=${encodeURIComponent(replyMessage)}`
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Reply sent successfully!');
+      document.getElementById('replyForm').reset();
+      var replyModal = bootstrap.Modal.getInstance(document.getElementById('replyModal'));
+      replyModal.hide();
+      refreshTickets();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while sending the reply.');
+  });
+});
+
+function refreshTickets() {
+  location.reload();
+}
+
+function filterTickets() {
+  const status = document.getElementById('status-filter').value;
+  if (status) {
+    window.location.href = `?status=${status}`;
+  } else {
+    window.location.href = window.location.pathname;
+  }
+}
+</script>
+{% endblock %}

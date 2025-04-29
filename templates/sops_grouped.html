@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}SOPs by Category{% endblock %}
+
+{% block content %}
+  <h1>📂 SOPs by Category & Subcategory</h1>
+
+  {% for category, sops in grouped_sops.items() %}
+    <div class="category-group">
+      <h2>{{ category }}</h2>
+
+      {% set subgroups = {} %}
+      {% for sop in sops %}
+        {% set sub = sop.subcategory or 'General' %}
+        {% if sub not in subgroups %}
+          {% set _ = subgroups.update({sub: []}) %}
+        {% endif %}
+        {% set _ = subgroups[sub].append(sop) %}
+      {% endfor %}
+
+      {% for subcat, sub_sops in subgroups.items() %}
+        <h3 style="margin-left: 20px;">↳ {{ subcat }}</h3>
+        <ul style="margin-left: 30px;">
+          {% for sop in sub_sops %}
+            <li>
+              <strong>{{ sop.filename }}</strong>
+              – by {{ sop.uploaded_by }}
+              on {{ sop.date_uploaded.strftime('%Y-%m-%d') }}
+              – <a href="{{ url_for('download_file', filename=sop.filename) }}">Download</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  <p style="margin-top: 30px;"><a href="{{ url_for('home') }}">← Back to Home</a></p>
+{% endblock %}

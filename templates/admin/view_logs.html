@@ -1,0 +1,144 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<div class="admin-card mb-4 text-center">
+  <h3>📜 User Activity Logs</h3>
+  <p>Track user login, logout, password reset, uploads, and more.</p>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="admin-card">
+        <h6>Actions in Last 7 Days</h6>
+        <canvas id="actionsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="admin-card">
+        <h6>Filter Logs</h6>
+        <input type="text" id="usernameSearch" placeholder="Search Username" class="form-control mb-2">
+        <select id="actionFilter" class="form-control mb-2">
+          <option value="">All Actions</option>
+          <option value="login">Login</option>
+          <option value="logout">Logout</option>
+          <option value="reset_password">Reset Password</option>
+          <option value="upload_sop">Upload SOP</option>
+          <option value="delete_sop">Delete SOP</option>
+          <option value="amendment">Amendment</option>
+        </select>
+        <input type="text" id="dateRange" class="form-control" placeholder="Select Date Range">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Logs Table -->
+<div class="admin-card">
+  <table id="logsTable" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Action</th>
+        <th>Page</th>
+        <th>DateTime</th>
+        <th>IP Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td class="username-cell">{{ log.username }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.page if log.page else 'N/A' }}</td>
+        <td>{{ log.timestamp.strftime('%d-%b-%Y %H:%M') }}</td>
+        <td>{{ log.ip_address if log.ip_address else 'N/A' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+$(document).ready(function() {
+    var table = $('#logsTable').DataTable({
+        order: [[3, "desc"]] // Latest first
+    });
+
+    $('#usernameSearch').on('keyup', function() {
+        table.column(0).search(this.value).draw();
+    });
+
+    $('#actionFilter').on('change', function() {
+        table.column(1).search(this.value).draw();
+    });
+
+    $('#dateRange').daterangepicker({
+      autoUpdateInput: false,
+      locale: {
+          cancelLabel: 'Clear'
+      }
+    });
+
+    $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+          var min = picker.startDate;
+          var max = picker.endDate;
+          var date = moment(data[3], "DD-MMM-YYYY HH:mm");
+          if ((min == null && max == null) ||
+              (min == null && date <= max) ||
+              (min <= date && max == null) ||
+              (min <= date && date <= max)) {
+            return true;
+          }
+          return false;
+        }
+      );
+      table.draw();
+    });
+
+    $('#dateRange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      $.fn.dataTable.ext.search.pop();
+      table.draw();
+    });
+
+    // Click Username to Filter
+    $('#logsTable').on('click', '.username-cell', function() {
+      var username = $(this).text();
+      $('#usernameSearch').val(username);
+      table.column(0).search(username).draw();
+    });
+});
+
+// Chart.js Bar Chart
+const actionsChart = new Chart(document.getElementById('actionsChart'), {
+    type: 'bar',
+    data: {
+      labels: {{ chart_labels|tojson }},
+      datasets: [{
+        label: 'Actions',
+        data: {{ chart_counts|tojson }},
+        backgroundColor: '#1c4ca4'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+});
+</script>
+
+{% endblock %}

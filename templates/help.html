@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Help Center | NHRC SOP Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+  <!-- 🎯 Welcome Header -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">🆘 Need Help?</h1>
+    <p class="lead">Find answers, guides, and support for using the NHRC SOP Portal</p>
+  </div>
+
+  <!-- 📋 FAQs Section -->
+  <div class="accordion mb-5" id="faqAccordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faqHeadingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+          🔹 How do I upload a new SOP?
+        </button>
+      </h2>
+      <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Click "Upload SOP" on the navigation bar and complete the upload form. Your document will then appear in the "Documents" section after admin approval.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faqHeadingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+          🔹 How can I check if an SOP is approved?
+        </button>
+      </h2>
+      <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Go to "View SOPs" — the status column will show if a document is Approved, Draft, or Pending Review.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faqHeadingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+          🔹 Who has permissions to approve documents?
+        </button>
+      </h2>
+      <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Only Admins and Heads of Department (HOD) have document approval permissions.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✉️ Contact Support Section -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h3 class="card-title">📨 Still Need Help?</h3>
+      <p>If you can't find an answer in the FAQs, please send us a support message.</p>
+      
+<form method="POST" action="{{ url_for('submit_support_ticket') }}" class="row g-3">
+  <div class="col-md-6">
+    <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+  </div>
+  <div class="col-md-6">
+    <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+  </div>
+  <div class="col-12">
+    <input type="text" name="subject" class="form-control" placeholder="Subject" required>
+  </div>
+  <div class="col-12">
+    <textarea name="message" class="form-control" rows="5" placeholder="Describe your issue or question..." required></textarea>
+  </div>
+  <div class="col-12 text-center">
+    <button type="submit" class="btn btn-primary w-50">🚀 Send Support Request</button>
+  </div>
+</form>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- 📜 Smooth Scroll Script for UX -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const links = document.querySelectorAll('.accordion-button');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      window.scrollBy({ top: -60, behavior: 'smooth' });
+    });
+  });
+});
+</script>
+
+{% endblock %}

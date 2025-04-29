@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Upload SOP{% endblock %}
+
+{% block content %}
+  {#<h1>📤 Upload SOP</h1>
+  <h1 class="text-center">📤 Upload SOP</h1>#}
+  <div class="container py-5 center-page">
+
+  <div class="col-md-8">
+    <h1 class="page-title text-center mb-4">📤 Upload New SOP</h1>
+
+    <div class="card shadow-sm border border-primary">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+
+  <form method="POST" enctype="multipart/form-data" class="upload-form">
+    <label for="file">Select File:</label><br>
+    <input type="file" id="file" name="file" required><br><br>
+
+    <label for="category">Choose Category:</label><br>
+    <select id="category" name="category" required>
+        <option value="">--Select--</option>
+        <option value="HR">HR</option>
+        <option value="Finance">Finance</option>
+        <option value="Lab">Lab</option>
+        <option value="Admin">Admin</option>
+        <option value="Dsd">Data Science</option>
+        <option value="Csd">Clinical Science</option>
+        <option value="Ssd">Social Science</option>
+    </select><br><br>
+
+    <label for="subcategory">Subcategory (optional):</label><br>
+    <input type="text" id="subcategory" name="subcategory"><br><br>
+
+    <button type="submit">📤 Upload</button>
+  </form>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+  {#<p style="margin-top: 20px;"><a href="{{ url_for('home') }}">← Back to Home</a></p>#}
+{% endblock %}

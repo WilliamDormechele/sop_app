@@ -1,0 +1,288 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+
+<!-- Admin Dashboard -->
+<div class="row mb-4">
+
+  <!-- Total Users -->
+  <div class="col-md-3 mb-3">
+    <div class="admin-card text-center">
+      <h5>Total Users</h5>
+      <h2>{{ total_users }}</h2>
+    </div>
+  </div>
+
+  <!-- Active Users -->
+  <div class="col-md-3 mb-3">
+    <div class="admin-card text-center">
+      <h5>Active Users</h5>
+      <h2>{{ active_users }}</h2>
+    </div>
+  </div>
+
+  <!-- Blocked Users -->
+  <div class="col-md-3 mb-3">
+    <div class="admin-card text-center">
+      <h5>Blocked Users</h5>
+      <h2>{{ blocked_users }}</h2>
+    </div>
+  </div>
+
+  <!-- Total SOPs -->
+  <div class="col-md-3 mb-3">
+    <div class="admin-card text-center">
+      <h5>Total SOPs</h5>
+      <h2>{{ total_sops }}</h2>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+
+  <!-- Visits Over Time Chart -->
+  <div class="col-md-6 mb-4">
+    <div class="admin-card">
+      <h5>Visits Over Last 7 Days</h5>
+      <canvas id="visitsChart"></canvas>
+    </div>
+  </div>
+
+  <!-- User Roles Chart -->
+<div class="col-md-6 mb-4">
+  <div class="admin-card">
+    <h5>User Roles Distribution</h5>
+    <canvas id="rolesChart" style="max-height: 300px;"></canvas>
+  </div>
+</div>
+
+</div>
+
+<div class="row">
+
+  <!-- Support Tickets Summary -->
+  <div class="col-md-4 mb-4">
+    <div class="card border-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+              Support Tickets</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">
+              {{ total_tickets }} Tickets
+            </div>
+            <small>
+              📩 Pending: {{ pending_tickets }} | ✅ Resolved: {{ resolved_tickets }}
+            </small>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-life-ring fa-2x text-primary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Tickets -->
+  <div class="col-md-4">
+    <div class="card text-center mb-4">
+      <div class="card-body">
+        <h5 class="card-title">📨 Total Tickets</h5>
+        <h2 class="text-primary">{{ total_tickets }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open Tickets -->
+  <div class="col-md-4">
+    <div class="card text-center mb-4">
+      <div class="card-body">
+        <h5 class="card-title">🟢 Open Tickets</h5>
+        <h2 class="text-success">{{ open_tickets }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closed Tickets -->
+  <div class="col-md-4">
+    <div class="card text-center mb-4">
+      <div class="card-body">
+        <h5 class="card-title">🔴 Closed Tickets</h5>
+        <h2 class="text-danger">{{ closed_tickets }}</h2>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Pie Charts -->
+<div class="row">
+
+  <!-- Pending vs Resolved -->
+  <div class="col-md-6 mb-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">🎯 Support Tickets Pending vs Resolved</h5>
+        <canvas id="ticketsPieChart1" style="max-height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open vs Closed -->
+  <div class="col-md-6 mb-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title text-center">🎯 Tickets Open vs Closed</h5>
+        <canvas id="ticketsPieChart2" style="max-height: 300px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Last Login Card -->
+<div class="admin-card text-center mb-4">
+  <h5>🕑 Last User Login</h5>
+  <p style="font-size: 16px;">{{ last_login_date }}</p>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Visits Chart
+const visitsChart = new Chart(document.getElementById('visitsChart'), {
+  type: 'line',
+  data: {
+    labels: {{ visits_dates|tojson }},
+    datasets: [{
+      label: 'Visits',
+      data: {{ visits_counts|tojson }},
+      borderColor: '#1c4ca4',
+      backgroundColor: 'rgba(28, 76, 164, 0.2)',
+      tension: 0.4,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
+});
+
+
+// Roles Chart
+const rolesChart = new Chart(document.getElementById('rolesChart'), {
+  type: 'pie',
+  data: {
+    labels: ['Admin', 'HOD', 'User'],
+    datasets: [{
+      data: {{ role_counts|tojson }},
+      backgroundColor: ['#1c4ca4', '#28a745', '#ffc107']
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
+</script>
+
+<script>
+// Pending vs Resolved (ticketsPieChart1)
+document.addEventListener('DOMContentLoaded', function () {
+  var ctx1 = document.getElementById('ticketsPieChart1').getContext('2d');
+  var pendingCount = {{ pending_tickets }};
+  var resolvedCount = {{ resolved_tickets }};
+  
+  new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+      labels: ['Pending', 'Resolved'],
+      datasets: [{
+        label: 'Tickets',
+        data: [pendingCount, resolvedCount],
+        backgroundColor: [
+          'rgba(255, 193, 7, 0.8)',
+          'rgba(40, 167, 69, 0.8)'
+        ],
+        borderColor: [
+          'rgba(255, 193, 7, 1)',
+          'rgba(40, 167, 69, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { size: 14 } }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let total = pendingCount + resolvedCount;
+              let value = context.parsed;
+              let percentage = ((value / total) * 100).toFixed(1);
+              return `${context.label}: ${value} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+
+<script>
+// Open vs Closed (ticketsPieChart2)
+document.addEventListener('DOMContentLoaded', function() {
+  var ctx2 = document.getElementById('ticketsPieChart2').getContext('2d');
+  var openTickets = {{ open_tickets }};
+  var closedTickets = {{ closed_tickets }};
+  
+  new Chart(ctx2, {
+    type: 'pie',
+    data: {
+      labels: ['Open', 'Closed'],
+      datasets: [{
+        label: 'Tickets',
+        data: [openTickets, closedTickets],
+        backgroundColor: [
+          'rgba(40, 167, 69, 0.8)', 
+          'rgba(220, 53, 69, 0.8)'
+        ],
+        borderColor: [
+          'rgba(40, 167, 69, 1)',
+          'rgba(220, 53, 69, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 14 } }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let total = openTickets + closedTickets;
+              let value = context.parsed;
+              let percentage = ((value / total) * 100).toFixed(1);
+              return `${context.label}: ${value} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+
+{% endblock %}

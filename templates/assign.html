@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Assign SOP{% endblock %}
+
+{% block content %}
+<h2>Assign SOP</h2>
+
+<form method="POST" action="{{ url_for('assign_sop') }}">
+  <input type="hidden" name="sop_id" value="{{ sop.id }}">
+
+  <label>Select users to assign:</label><br>
+  {% for user in users %}
+    <input type="checkbox" name="user_ids" value="{{ user.id }}"> {{ user.username }}<br>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-primary mt-3">Assign SOP</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}API Keys Manager{% endblock %}
+
+{% block admin_content %}
+<div class="text-center mb-4">
+  <h2 class="fw-bold">🔑 API Key Manager</h2>
+  <p class="text-muted">Manage, create, disable, regenerate, and delete your API keys for system integrations.</p>
+</div>
+
+<!-- Create API Key Form -->
+<div class="card shadow-sm p-4 mb-4">
+  <form method="POST" class="row g-3 align-items-center justify-content-center">
+    <div class="col-md-4">
+      <input type="text" class="form-control" name="description" placeholder="Enter Key Description" required>
+    </div>
+    <div class="col-md-3">
+      <input type="date" class="form-control" name="expires_at" placeholder="Expiry (optional)">
+    </div>
+    <div class="col-md-2">
+      <button id="createKeyBtn" type="submit" class="btn btn-primary px-4" style="min-width: 130px;">
+  <span id="btnText">Create Key</span>
+  <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+</button>
+    </div>
+  </form>
+</div>
+
+<!-- API Keys Table -->
+<div class="card shadow-sm p-3">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm align-middle text-center">
+      <thead class="table-primary">
+        <tr>
+          <th>Key</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Expires</th>
+          <th>Created</th>
+          <th>Created By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for key in api_keys %}
+        <tr>
+        <td class="api-key-cell">
+          <div class="d-flex align-items-center gap-2">
+            <span id="key-{{ key.id }}">{{ key.key }}</span>
+            <button class="btn btn-outline-secondary btn-sm copy-btn" title="Copy Key" data-key-id="{{ key.id }}">📋</button>
+          </div>
+        </td>
+
+          <td style="font-size: 13px;">{{ key.description }}</td>
+          <td>
+            {% if key.active %}
+              <span class="badge bg-success">Active</span>
+            {% else %}
+              <span class="badge bg-danger">Disabled</span>
+            {% endif %}
+          </td>
+          <td>{{ key.expires_at.strftime('%Y-%m-%d') if key.expires_at else "No Expiry" }}</td>
+          <td>{{ key.created_at.strftime('%Y-%m-%d') }}</td>
+          <td>{{ key.created_by }}</td>
+          <td>
+            <div class="d-flex flex-nowrap justify-content-center gap-1">
+              {% if key.active %}
+              <form method="POST" action="{{ url_for('disable_api_key', key_id=key.id) }}" class="inline-form">
+                <button type="submit" class="btn btn-warning btn-sm">Disable</button>
+              </form>
+              {% else %}
+              <form method="POST" action="{{ url_for('enable_api_key', key_id=key.id) }}" class="inline-form">
+                <button type="submit" class="btn btn-success btn-sm">Enable</button>
+              </form>
+              {% endif %}
+              <form method="POST" action="{{ url_for('regenerate_api_key', key_id=key.id) }}" class="inline-form">
+                <button type="submit" class="btn btn-info btn-sm">Regen</button>
+              </form>
+              <form method="POST" action="{{ url_for('delete_api_key', key_id=key.id) }}" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this API Key?');">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function() {
+  const btn = document.getElementById('createKeyBtn');
+  const text = document.getElementById('btnText');
+  const spinner = document.getElementById('btnSpinner');
+  
+  btn.disabled = true;            // Disable the button
+  text.textContent = "Creating...";  // Change button text
+  spinner.classList.remove('d-none'); // Show the spinner
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      Swal.fire({
+        icon: '{{ category }}' === 'success' ? 'success' : 'info',
+        title: '{{ message }}',
+        timer: 2500,
+        showConfirmButton: false
+      });
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</script>
+
+<script>
+document.querySelectorAll('.copy-btn').forEach(button => {
+  button.addEventListener('click', function() {
+    const keyId = this.getAttribute('data-key-id');
+    const keyText = document.getElementById('key-' + keyId).textContent;
+
+    navigator.clipboard.writeText(keyText)
+      .then(() => {
+        // Success feedback using SweetAlert
+        Swal.fire({
+          icon: 'success',
+          title: 'Copied!',
+          text: 'API Key copied to clipboard.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      })
+      .catch(err => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Failed to copy API Key.',
+        });
+      });
+  });
+});
+</script>
+
+{% endblock %}

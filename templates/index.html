@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Home - NHRC SOP Portal{% endblock %}
+
+{% block content %}
+
+<div class="home-page-wrapper">
+
+  <div class="welcome-section text-center">
+    <h1>🏠 Welcome to the NHRC SOP Portal</h1>
+    <p class="lead">Easily search, manage, upload, and track all Standard Operating Procedures (SOPs).</p>
+    <hr class="my-4">
+  </div>
+
+  <div class="row g-4">
+
+    <!-- What You Can Do Section -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h3 class="card-title text-primary">🚀 What You Can Do (Features):</h3>
+          <ul class="feature-list">
+            <li>📂 Browse All SOPs</li>
+            <li>📂 Browse Specific SOPs relevant to your project/department</li>
+            <li>🔍 Search/Filter relevant SOPs</li>
+            <li>📥 Download SOPs relevant to your project/department</li>
+            {% if session.get('role') in ['admin', 'hod'] %}
+              <li>📤 Upload new SOPs with categories and subcategories</li>
+            {% endif %}
+            <li>📝 Make Request for SOPs Amendments</li>
+            <li>📝 Mark SOPs as read for tracking and GCP compliance</li>
+            <li>📊 View analytics on SOP usage in the dashboard</li>
+            <li>📊 View & Download Audit Trail/Logs of each SOP</li>
+            <li>🔒 Manage your account and change password anytime</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links Section -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h3 class="card-title text-primary">🔗 Quick Links:</h3>
+          <ul class="quick-links">
+            <li>📄 <a href="{{ url_for('list_sops') }}">View SOPs</a></li>
+            {% if session.get('role') in ['admin', 'hod'] %}
+              <li>📤 <a href="{{ url_for('upload_file') }}">Upload SOP</a></li>
+            {% endif %}
+            <li>📊 <a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li>🪟 <a href="{{ url_for('audit_log') }}">View Audit Logs</a></li>
+            <li>📥 <a href="{{ url_for('download_audit_logs') }}">Download 📝 Audit Logs</a></li>
+            <li>🔐 <a href="{{ url_for('change_password') }}">Change Password</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Support Info -->
+  <div class="text-center mt-5 small text-muted">
+    For technical support, please contact 
+    <a href="mailto:williamdormechele@navrongo-hrc.org" class="text-primary">williamdormechele@navrongo-hrc.org</a>
+  </div>
+
+</div>
+
+{% endblock %}

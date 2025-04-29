@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Version History{% endblock %}
+{% block content %}
+<h2>📜 Version History: {{ filename }}</h2>
+<p style="margin-top: 20px;"><a href="{{ url_for('list_sops') }}">🔙 Back to SOPs</a></p>
+
+<table border="1" cellpadding="10">
+  <tr>
+    <th>Version</th>
+    <th>Status</th>
+    <th>Uploaded By</th>
+    <th>Date Uploaded</th>
+    <th>Approved By</th>
+    <th>Date Approved</th>
+    <th>Actions</th>
+  </tr>
+  {% for sop in versions %}
+  <tr>
+    <td>{{ sop.version }}</td>
+    <td>{{ sop.status }}</td>
+    <td>{{ sop.uploaded_by }}</td>
+    <td>{{ sop.date_uploaded.strftime('%Y-%m-%d') }}</td>
+    <td>{{ sop.approved_by or '—' }}</td>
+    <td>{{ sop.date_approved.strftime('%Y-%m-%d') if sop.date_approved else '—' }}</td>
+    <td>
+      <a href="{{ url_for('download_file', filename=sop.filename) }}">Download</a>
+      {% if sop.status == 'approved' and sop.version != current_version %}
+        <form method="post" action="{{ url_for('restore_version', sop_id=sop.id) }}" style="display:inline;">
+          <button type="submit" onclick="return confirm('Restore version {{ sop.version }}?')">♻️ Restore</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

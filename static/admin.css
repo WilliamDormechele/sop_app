@@ -1,0 +1,56 @@
+/* 📄 /static/admin.css */
+
+/* 🖊️ Style for inline form buttons inside table */
+form.inline-form {
+  display: inline-block; /* Keep forms side by side */
+  margin: 0 2px;          /* Small horizontal space between them */
+}
+
+/* 🖊️ Style for the API key text in the table */
+.api-key-cell {
+  font-size: 12px;         /* Smaller font for keys */
+  word-break: break-word;  /* Break long key text to avoid overflow */
+  max-width: 300px;        /* Limit width so it doesn't stretch the table */
+}
+
+/* 🖊️ Style for the Action buttons container */
+.action-buttons {
+  display: flex;           /* Arrange buttons in a row */
+  flex-wrap: nowrap;       /* Don't allow buttons to wrap to next line */
+  justify-content: center; /* Center the buttons horizontally */
+  gap: 4px;                /* Small space between buttons */
+}
+
+/* 🖊️ Reset form margins inside action-buttons */
+.action-buttons form {
+  margin: 0; /* Remove extra margins to keep buttons tight */
+}
+
+/* 🖊️ Style for buttons inside Action section */
+.action-buttons button {
+  padding: 3px 6px;          /* Smaller padding to make buttons compact */
+  font-size: 11px;           /* Smaller font for table action buttons */
+  white-space: nowrap;       /* Prevent button text from breaking */
+}
+
+/* 🖊️ Style for the "Create API Key" form */
+/* 📄 Already inside /static/admin.css */
+.api-form {
+  display: flex;             /* Arrange fields horizontally */
+  align-items: flex-start;       /* Vertically center them */
+  gap: 10px;                 /* Nice space between fields */
+  flex-wrap: wrap;           /* Allow wrapping on small screens (responsive) */
+  padding: 10px 0;           /* Optional: Add slight padding */
+}
+
+.api-form input, 
+.api-form button {
+  height: 40px;              /* Uniform height for all */
+  min-width: 200px;          /* Minimum width for input fields */
+}
+
+.api-form button {
+  margin-top: 5px;            /* 👈 This pushes the button down slightly */
+}
+
+

@@ -1,0 +1,211 @@
+{% extends "admin/admin_base.html" %}
+{% block admin_content %}
+
+<!-- Add quick style fix -->
+<style>
+  .admin-card {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  #usersTable_wrapper {
+    width: 100%;
+  }
+
+  #usersTable {
+    width: 100% !important;
+    table-layout: auto;
+  }
+
+  #usersTable td {
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+</style>
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+<div class="admin-card mb-4 text-center">
+  <h3>👥 Manage Users</h3>
+  <p>View, suspend, promote, delete users easily.</p>
+
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <div class="admin-card">
+        <h6>Total Users</h6>
+        <h3>{{ total_users }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="admin-card">
+        <h6>Active Users</h6>
+        <h3>{{ active_users }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="admin-card">
+        <h6>Blocked Users</h6>
+        <h3>{{ blocked_users }}</h3>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="admin-card">
+        <h6>Suspended Users</h6>
+        <h3>{{ suspended_users }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Actions -->
+<form id="bulkActionForm" method="POST" action="{{ url_for('bulk_action_users') }}">
+  <div class="mb-3">
+    <button type="submit" name="action" value="delete" class="btn btn-danger">Bulk Delete</button>
+    <button type="submit" name="action" value="reset" class="btn btn-warning">Bulk Reset Password</button>
+  </div>
+
+<!-- Users Table -->
+<div class="admin-card">
+  <table id="usersTable" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="selectAll"></th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td><input type="checkbox" name="user_ids" value="{{ user.id }}"></td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          {% if user.is_blocked %}
+            Blocked
+          {% elif not user.is_active %}
+            Suspended
+          {% else %}
+            Active
+          {% endif %}
+        </td>
+        <td style="white-space: nowrap;">
+          {% if user.role != 'admin' %}
+            <button type="button" class="btn btn-sm btn-primary me-1" onclick="resetPassword('{{ user.id }}', '{{ user.username }}')">Reset</button>
+            <button type="button" class="btn btn-sm btn-warning me-1" onclick="toggleSuspend('{{ user.id }}', '{{ user.is_active }}')">
+              {% if user.is_active %}Suspend{% else %}Activate{% endif %}
+            </button>
+            <button type="button" class="btn btn-sm btn-success me-1" onclick="promoteUser('{{ user.id }}')">Promote</button>
+            <button type="button" class="btn btn-sm btn-danger me-1" onclick="deleteUser('{{ user.id }}')">Delete</button>
+          {% else %}
+            Admin
+          {% endif %}
+          <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-info btn-sm me-1">Edit</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    $('#usersTable').DataTable();
+
+    // Handle Select All
+    $('#selectAll').on('click', function(){
+      var rows = $('#usersTable').DataTable().rows({ 'search': 'applied' }).nodes();
+      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+    });
+});
+
+// Reset Password
+function resetPassword(userId, username) {
+  Swal.fire({
+    title: `Reset password for ${username}?`,
+    text: "A new random password will be generated and emailed!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, reset!",
+    showLoaderOnConfirm: true,
+    preConfirm: () => {
+      return fetch(`/admin/users/reset/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then(response => {
+        if (!response.ok) throw new Error(response.statusText);
+        return response.json().catch(() => ({}));
+      })
+      .catch(error => {
+        Swal.showValidationMessage(`Request failed: ${error}`);
+      });
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire('✅ Success!', 'Password reset and email sent.', 'success').then(() => {
+        location.reload();
+      });
+    }
+  });
+}
+
+// Suspend/Activate User
+function toggleSuspend(userId, isActive) {
+  let action = (isActive == 'True') ? 'Suspend' : 'Activate';
+  Swal.fire({
+    title: `${action} this user?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: `Yes, ${action.toLowerCase()}!`,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = `/admin/users/suspend/${userId}`;
+    }
+  });
+}
+
+// Promote User
+function promoteUser(userId) {
+  Swal.fire({
+    title: "Promote this user?",
+    text: "This user will be upgraded!",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonText: "Yes, promote!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = `/admin/users/promote/${userId}`;
+    }
+  });
+}
+
+// Delete User
+function deleteUser(userId) {
+  Swal.fire({
+    title: "Delete this user?",
+    text: "User will be permanently deleted!",
+    icon: "error",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = `/admin/users/delete/${userId}`;
+    }
+  });
+}
+</script>
+
+{% endblock %}

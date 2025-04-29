@@ -1,0 +1,1596 @@
+/* -----------------------
+📄 GLOBAL STYLES
+------------------------ */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 165px 30px 30px 10px; /* top | right | bottom | left */
+  color: #333;
+}
+
+.content {
+  max-width: none; /* remove if not needed */
+  margin: 0;        /* prevent center shift */
+  padding: 0;       /* no vertical pushing from here */
+}
+
+h1 {
+  color: #1a73e8;
+}
+
+a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+ul li {
+  list-style-type: none;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* -----------------------
+✅ FORMS & INPUTS
+------------------------ */
+form, ul {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+input[type="file"],
+select,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* -----------------------
+🔘 BUTTONS
+------------------------ */
+button {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0c59d1;
+}
+
+.read-button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* -----------------------
+📄 SOP Cards
+------------------------ */
+.sop-card {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+/* -----------------------
+📥 Upload Form
+------------------------ */
+.upload-form {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+}
+.upload-form input,
+.upload-form select {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.upload-form button {
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+.upload-form button:hover {
+  background-color: #1745ad;
+}
+
+/* -----------------------
+📂 Grouped SOPs
+------------------------ */
+.category-group {
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-left: 4px solid #2563eb;
+  border-radius: 4px;
+}
+
+/* -----------------------
+🔐 Login Page
+------------------------ */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 25px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.login-form label {
+  display: block;
+  margin-top: 10px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+/* -----------------------
+⚠️ Flash Messages
+------------------------ */
+.flashes {
+  list-style: none;
+  padding: 10px;
+  margin-top: 10px;
+}
+.flash.success { color: green; }
+.flash.error { color: red; }
+.flash.warning { color: orange; }
+
+/* -----------------------
+📊 Dashboard
+------------------------ */
+.dashboard-section {
+  margin-bottom: 25px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+/* -----------------------
+🔻 Footer
+------------------------ */
+footer {
+  background-color: #f1f1f1;
+  color: #333;
+  padding: 20px;
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 40px;
+}
+footer a {
+  color: #0066cc;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* -----------------------
+🏥 NHRC Header
+------------------------ */
+.nhrc-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f4ff;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+  z-index: 1000; /* keep it above everything */
+}
+
+
+.header-row.centered-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.logo-container {
+  flex: 0 0 auto;
+}
+.header-logo {
+  height: 60px;
+  width: auto;
+}
+.header-text {
+  text-align: center;
+  max-width: 400px;
+}
+.header-text h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+.header-text h3 {
+  margin: 0;
+  font-weight: normal;
+  color: #555;
+  font-size: 16px;
+}
+
+/* -----------------------
+👤 User Info Bar
+------------------------ */
+
+/* Full-width logout bar */
+.user-bar {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  background: #e5e5e5;
+  display: flex;
+  padding: 8px 30px;
+  font-size: 14px;
+  z-index: 999;
+}
+
+
+.user-info {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.logout-warning {
+  flex: 1;
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
+
+/* Full-width nav bar */
+.nav-wrapper {
+  position: fixed;
+  top: 114px; /* below user bar */
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  z-index: 998;
+}
+
+
+/* Audit Trail */
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.95em;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.audit-table th, .audit-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.audit-table th {
+  background-color: #2563eb;
+  color: white;
+}
+
+.audit-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.audit-table th, .audit-table td {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.audit-table thead {
+  background-color: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.audit-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.audit-table tr:hover {
+  background-color: #eef6ff;
+}
+
+.audit-table td strong {
+  color: #1a202c;
+}
+
+
+
+/* Version History Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+}
+
+table th,
+table td {
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+table th {
+  background-color: #2563eb;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Buttons */
+button,
+a.button-link {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover,
+a.button-link:hover {
+  background-color: #174ea6;
+}
+
+/* Restore Button */
+button.restore-btn {
+  background-color: #4CAF50; /* green */
+}
+
+button.restore-btn:hover {
+  background-color: #3e8e41;
+}
+
+/* Download Link */
+a.download-link {
+  color: #2563eb;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+a.download-link:hover {
+  text-decoration: underline;
+}
+
+/* Audit Link Bar */
+.audit-links a {
+  margin-right: 15px;
+}
+
+
+
+/* SOP Card  for each sop with shadow*/
+.sop-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-left: 5px solid #2563eb;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s;
+}
+
+.sop-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+button,
+a.button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+.read-button {
+  background-color: #2563eb;
+}
+
+.delete-button {
+  background: none;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+  background-color: #dc354510; /* subtle red background on hover */
+  color: #a80000;
+  border-color: #a80000;
+}
+
+.download-button {
+  background-color: #198754;
+}
+
+.version-link {
+  color: #444;
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+.version-link:hover {
+  text-decoration: underline;
+  color: #2563eb;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-right: 8px;
+}
+
+/* Label bold filename */
+.sop-card label strong {
+  font-weight: 600;
+  color: #1a202c;
+}
+
+
+/* -----------------------
+🔐 Login Page
+------------------------ */
+.login-box-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top */
+  padding-top: 20px;       /* Add small top padding */
+  margin-top: 10px;        /* Optional: small spacing from header */
+  min-height: auto;        /* Avoid full height if not needed */
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+.login-box {
+  padding: 20px 30px;
+}
+
+
+.login-box {
+  background: #fcfffc;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-logo {
+  max-height: 60px;
+  margin-bottom: 10px;
+}
+
+.login-box h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-form label {
+  display: block;
+  text-align: left;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+.login-form input,
+.login-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.remember-wrapper {
+  margin-top: 15px;
+  text-align: left;
+}
+
+.remember-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95em;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.remember-label input[type="checkbox"] {
+  transform: scale(1.2);
+  margin: 0;
+}
+
+
+
+.login-btn {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #0069d9;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #004fa3;
+}
+
+.forgot-password {
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.flash.success,
+.flash.error,
+.flash.warning {
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.flash.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.flash.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.flash.warning {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+
+/* -----------------------
+📁 Top Navigation Tabs
+------------------------ */
+.top-tabs {
+  width: 100%;
+  background: #fdfdfd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.top-tab-list {
+  display: flex;
+  justify-content: space-evenly;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.top-tab-list li {
+  display: block;
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid #eee;
+  min-width: 150px;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+
+.top-tab-list li:nth-child(5) {
+  margin-left: 6px;
+}
+
+
+.top-tab-list a {
+  display: block;               /* fill entire li */
+  padding: 5px 0;              /* full height padding */
+  width: 100%;
+  height: 100%;
+  color: #111;
+  font-weight: 600;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.2s ease;
+  line-height: 1.4;
+}
+
+.top-tab-list a i {
+  margin-right: 8px;
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.top-tab-list a:hover {
+  background-color: #f0f4ff;
+  color: #1a73e8;
+}
+
+.top-tab-list a:hover i {
+  transform: scale(1.2);
+}
+
+
+.top-tab-list a:hover i {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+/* Active tab */
+.top-tab-list a.active {
+  background-color: #e0ecff;
+  color: #2563eb;
+  font-weight: bold;
+  border-bottom: 2px solid #2563eb;
+}
+
+.top-tab-list li.active a {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  font-weight: bold;
+  border-bottom: 2px solid #1a73e8;
+  display: block;
+}
+
+.top-tab-list li.active a i {
+  color: #1a73e8; /* or whatever color suits each icon */
+}
+
+/* Default icon colors */
+.home-icon {
+  color: #1e88e5;  /* Blue */
+}
+.documents-icon {
+  color: #5e35b1;  /* Deep purple */
+}
+.sops-icon {
+  color: #512da8;  /* Indigo */
+}
+.upload-icon {
+  color: #2e7d32;  /* Green */
+}
+.dashboard-icon {
+  color: #f9a825;  /* Amber */
+}
+.password-icon {
+  color: #d32f2f;  /* Red */
+}
+
+/* Active state overrides icon color */
+.top-tab-list li.active a i {
+  color: inherit !important;
+}
+
+
+/* -----------------------
+📁 Documents
+------------------------ */
+.documents-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  padding-left: 0px;  /* reduce left padding */
+  padding-right: 10px; /* keep right padding if needed */
+}
+
+.documents-sidebar {
+  flex: 0 0 280px;
+  background: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.documents-sidebar h3 {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.documents-sidebar input,
+.documents-sidebar select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.documents-sidebar button {
+  width: 100%;
+  padding: 8px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.action-box {
+  background: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.my-searches {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+  font-size: 13px; /* Make text smaller */
+  color: #2563eb;
+}
+
+.my-searches li {
+  margin-bottom: 6px;
+  cursor: pointer;
+  font-size: 12.5px; /* Match your sample UI */
+  line-height: 1.3;
+}
+
+.documents-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Push to top */
+  padding-top: 10px; /* Reduce space */
+}
+
+.documents-search-box {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.documents-search-box input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.documents-search-box button {
+  padding: 10px 25px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.documents-search-box button:hover {
+  background-color: #1e40af;
+}
+
+.sidebar-box {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.search-default {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  display: block;
+  margin-bottom: 5px;
+}
+
+
+/* Highlight sop */
+.sop-card:target {
+  border: 2px solid #2563eb;
+  background-color: #e8f0fe;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+
+.sidebar-box select,
+.sidebar-box input[type="text"] {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+
+.form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.form-control, .form-select {
+  min-width: 160px;
+}
+
+
+/*    */
+.sop-filter-form,
+.sop-filter-form .form-group,
+.sop-filter-form .form-control,
+.sop-filter-form .form-select {
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+
+.card > * {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+
+.card {
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 20px;
+}
+
+  .pagination {
+    margin-top: 30px;
+  }
+
+
+/* 🔍 Main Search Area Styling */
+  /* Wrapper that centers the whole search box area */
+  .documents-main {
+    display: flex;
+    justify-content: center;     /* Center horizontally */
+    margin: 40px 0 30px;         /* Top and bottom spacing */
+  }
+
+  /* Main container for the search box */
+  .documents-search-box {
+    background-color: #e7e9ef;   /* Light background for contrast */
+    padding: 20px 40px;          /* Internal spacing (top/bottom, left/right) */
+    border-radius: 10px;         /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);  /* Subtle shadow */
+    max-width: 700px;            /* Maximum width to keep layout tight */
+    width: 100%;                 /* Expand to available width */
+    text-align: center;          /* Center content inside */
+  }
+
+  /* Heading text inside search box */
+  .documents-search-box h1 {
+    font-size: 1.5rem;           /* Larger text */
+    margin-bottom: 20px;         /* Space below heading */
+    color: #1f2937;              /* Dark gray color */
+    display: flex;               /* Flex for aligning icon + text */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;                   /* Space between icon and text */
+  }
+
+  /* Wrapper for input + icon */
+  .search-input-wrapper {
+    position: relative;          /* Needed to position icon inside input */
+    margin-bottom: 15px;         /* Space below input before button */
+  }
+
+  /* The icon inside the input field */
+  .search-input-wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 14px;                  /* Push icon in from the left */
+    transform: translateY(-50%); /* Vertically center the icon */
+    color: #2563eb;              /* Blue accent color */
+    font-size: 1rem;             /* Medium icon size */
+  }
+
+  /* The actual text input field */
+  .documents-search-box input[type="text"] {
+    width: 100%;
+    padding: 12px 16px 12px 40px; /* Add left padding to make space for icon */
+    font-size: 1rem;
+    border: 1px solid #d1d5db;   /* Light gray border */
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s border ease; /* Smooth focus transition */
+  }
+
+  /* Input focus styling for highlighting */
+  .documents-search-box input[type="text"]:focus {
+    border-color: #2563eb;       /* Blue border on focus */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); /* Glow effect */
+  }
+
+  /* Style for the search button */
+  .documents-search-box button {
+    background-color: #2563eb;   /* Primary blue color */
+    color: white;
+    font-size: 1rem;
+    padding: 10px 24px;          /* Comfortable size */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;             /* Show pointer on hover */
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  /* Button hover effect */
+  .documents-search-box button:hover {
+    background-color: #1e40af;   /* Darker blue on hover */
+  }
+
+
+
+
+  <style>
+  .sidebar-box {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+  }
+
+  .sidebar-box .collapsible-header {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+  }
+
+  .sidebar-box ul.my-searches {
+    list-style: none;
+    padding-left: 12px;
+    margin: 0;
+  }
+
+  .sidebar-box ul.my-searches li {
+    padding: 3px 0;
+    margin: 0;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .sidebar-box ul.my-searches li:last-child {
+    border-bottom: none;
+  }
+
+  .sidebar-box ul.my-searches li a {
+    font-size: 0.82rem;
+    color: #2563eb;
+    text-decoration: none;
+  }
+
+  .sidebar-box ul.my-searches li a:hover {
+    text-decoration: underline;
+    color: #1e40af;
+  }
+
+  .search-default {
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #6b7280;
+    margin-bottom: 6px;
+    display: block;
+  }
+</style>
+
+
+<style>
+  /* My Actions container: adds scroll when needed */
+  .actions-body {
+    max-height: 150px;         /* 📏 Limit height */
+    overflow-y: auto;          /* 📜 Scroll only if needed */
+    padding: 5px 10px;
+  }
+
+  /* Each SOP link inside My Actions */
+  .actions-body a {
+    display: block;
+    font-size: 0.78rem;        /* 🔠 Smaller font size */
+    color: #2563eb;
+    text-decoration: none;
+    margin-bottom: 6px;
+    word-break: break-word;    /* 🚫 Prevent overflow issues */
+  }
+
+  .actions-body a:hover {
+    text-decoration: underline;
+    color: #1e40af;
+  }
+
+  /* No Action message styling */
+  .no-action {
+    font-size: 0.85rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+</style>
+
+
+.amendment-form-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+}
+
+.amendment-form-container h2 {
+  margin-bottom: 20px;
+  color: #2563eb;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.amendment-form-container label {
+  font-weight: 500;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.amendment-form-container input[type="text"],
+.amendment-form-container input[type="date"],
+.amendment-form-container select,
+.amendment-form-container textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
+.amendment-form-container textarea {
+  min-height: 100px;
+}
+
+.amendment-form-container button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.amendment-form-container button:hover {
+  background-color: #1e3a8a;
+}
+
+
+/* 🎨 Manage Amendment Page Styling */
+.manage-amendment-form {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 30px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 960px;
+}
+
+.manage-amendment-form h3 {
+  font-size: 1.4rem;
+  color: #2563eb;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.manage-amendment-form .form-label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #0145b3;
+}
+
+.manage-amendment-form .form-control,
+.manage-amendment-form .form-select {
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.manage-amendment-form .form-control:focus,
+.manage-amendment-form .form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.manage-amendment-form .btn {
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 10px 20px;
+}
+
+.manage-amendment-form .btn-primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.manage-amendment-form .btn-primary:hover {
+  background-color: #1e40af;
+}
+
+.collapsible-section {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.collapsible-header {
+  padding: 15px 20px;
+  font-weight: 600;
+  background-color: #e5e7eb;
+  border-bottom: 1px solid #d1d5db;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.collapsible-body {
+  padding: 15px 20px;
+  background-color: white;
+}
+
+/* Stage 2 active */
+#tab-stage2.active {
+  background-color: #198754; /* Success Green */
+  color: white;
+  font-weight: bold;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+/* Stage 2 hover */
+#tab-stage2:hover {
+  background-color: #157347; /* Darker Green on hover */
+  color: white;
+}
+
+/* Stage 1 active */
+#tab-stage1.active {
+  background-color: #0d6efd; /* Primary Blue */
+  color: white;
+  font-weight: bold;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+/* Stage 1 hover */
+#tab-stage1:hover {
+  background-color: #0b5ed7; /* Darker Blue on hover */
+  color: white;
+}
+
+/********************************************************************************* */
+
+/* 🎨 Home Page Styling */
+.home-page-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 15px;
+}
+
+.welcome-section h1 {
+  font-size: 2.4rem;
+  color: #1a73e8;
+  font-weight: 700;
+}
+
+.welcome-section p.lead {
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+.feature-list,
+.quick-links {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 15px;
+}
+
+.feature-list li,
+.quick-links li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.quick-links li a {
+  color: #0b5ed7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.quick-links li a:hover {
+  text-decoration: underline;
+}
+
+.card-title {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.small.text-muted {
+  font-size: 0.9rem;
+}
+
+
+.counter {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.card-title {
+  font-size: 1.1rem;
+}
+
+.card-body {
+  padding: 1rem 1.2rem;
+}
+
+
+.table-hover tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4em 0.6em;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.card-header {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+
+
+.form-label {
+  font-weight: 500;
+}
+
+/* Style the "Choose File" button */
+input[type="file"]::file-selector-button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  margin-right: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  height: 40px;
+}
+
+/* Hover effect */
+input[type="file"]::file-selector-button:hover {
+  background-color: #1e40af;
+}
+
+.center-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.center-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+
+.border-start {
+  border-left: 5px solid #2563eb !important;
+}
+
+form.row.g-3 input, form.row.g-3 select {
+  font-size: 0.95rem;
+}
+form.row.g-3 .btn {
+  font-size: 0.95rem;
+}
+
+
+
+/* Stage 2 Review & Consensus styling */
+.stage2-form .card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.stage2-form .card:hover {
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.2);
+}
+
+.stage2-form .card-header {
+  background: linear-gradient(90deg, #0d6efd 0%, #6ea8fe 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.stage2-form .form-label {
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.stage2-form textarea,
+.stage2-form input[type="text"] {
+  border-radius: 6px;
+  box-shadow: none;
+  transition: border-color 0.2s;
+}
+
+.stage2-form textarea:focus,
+.stage2-form input[type="text"]:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+.stage2-form button {
+  padding: 10px 16px;
+  font-size: 1rem;
+}
+
+
+.documents-list li {
+  padding: 8px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #dddddd;
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main.content {
+  flex: 1;
+  padding-top: 140px; /* ✅ add spacing after your header/navbar */
+}
+
+
+
+
+/* ------------------------------------
+   Reply Ticket Page Styles
+-------------------------------------*/
+
+/* Outer Container */
+.reply-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 5px; /* 👈 Change page padding here */
+}
+
+/* Card Box */
+.reply-card {
+  background: #ffffff; /* 👈 Card background color */
+  padding: 40px; /* 👈 Card inner padding */
+  border-radius: 16px; /* 👈 Card border roundness */
+  box-shadow: 0 4px 80px rgba(0, 0, 0, 0.08); /* 👈 Card shadow */
+  max-width: 700px; /* 👈 Card max width */
+  width: 100%;
+}
+
+/* Big Title */
+.reply-title {
+  font-size: 2rem; /* 👈 Title font size */
+  font-weight: 700;
+  color: #333333; /* 👈 Title text color */
+  text-align: center;
+  margin-bottom: 30px; /* 👈 Space under title */
+}
+
+/* Ticket Info (Subject + Email) */
+.reply-info {
+  font-size: 1rem;
+  color: #555555; /* 👈 Info text color */
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Form group wrapper */
+.reply-form .form-group {
+  margin-bottom: 20px; /* 👈 Space under each form field */
+}
+
+/* Label for textarea */
+.reply-form .form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px; /* 👈 Space under label */
+  color: #444444; /* 👈 Label text color */
+}
+
+/* Textarea itself */
+.reply-form .form-control {
+  width: 100%;
+  padding: 14px 16px; /* 👈 Textarea padding */
+  border: 1px solid #cccccc; /* 👈 Textarea border color */
+  border-radius: 8px; /* 👈 Textarea border roundness */
+  font-size: 1rem; /* 👈 Textarea font size */
+  resize: vertical; /* 👈 Allow vertical resizing only */
+  transition: border-color 0.3s;
+}
+
+/* Textarea when clicked/focused */
+.reply-form .form-control:focus {
+  border-color: #4a90e2; /* 👈 Textarea focus border color */
+  outline: none;
+}
+
+/* Button group */
+.reply-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px; /* 👈 Space above the buttons */
+}
+
+/* Back to Tickets button */
+.btn-back {
+  padding: 10px 20px; /* 👈 Back button padding */
+  background: #f0f0f0; /* 👈 Back button background */
+  color: #555555; /* 👈 Back button text color */
+  font-weight: 600;
+  border-radius: 8px; /* 👈 Back button roundness */
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+/* Back button hover */
+.btn-back:hover {
+  background: #e0e0e0; /* 👈 Back button hover background */
+}
+
+/* Send Reply button */
+.btn-send {
+  padding: 10px 30px; /* 👈 Send button padding */
+  background: #4a90e2; /* 👈 Send button background color */
+  color: #ffffff; /* 👈 Send button text color */
+  font-weight: 600;
+  border: none;
+  border-radius: 8px; /* 👈 Send button roundness */
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+/* Send button hover */
+.btn-send:hover {
+  background: #357ABD; /* 👈 Send button hover color */
+}

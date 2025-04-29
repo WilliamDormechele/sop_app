@@ -1,0 +1,29 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Reply to Ticket{% endblock %}
+
+{% block admin_content %}
+<div class="reply-container">
+
+  <div class="reply-card">
+    <h2 class="reply-title">✉️ Reply to Support Ticket</h2>
+
+    <div class="reply-info">
+      <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+      <p><strong>Email:</strong> {{ ticket.email }}</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('send_reply', ticket_id=ticket.id) }}" class="reply-form">
+      <div class="form-group">
+        <label for="reply_message" class="form-label">Your Reply</label>
+        <textarea id="reply_message" name="reply_message" rows="8" class="form-control" placeholder="Type your reply..." required></textarea>
+      </div>
+
+      <div class="reply-buttons">
+        <a href="{{ url_for('support_tickets') }}" class="btn-back">← Back to Tickets</a>
+        <button type="submit" class="btn-send">✉️ Send Reply</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

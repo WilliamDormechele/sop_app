@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Documents{% endblock %}
+
+{% block content %}
+
+<style>
+  .documents-sidebar select {
+    appearance: auto !important;
+    background-color: #fff;
+    background-image: none;
+  }
+</style>
+
+<div class="documents-container">
+
+  <!-- 📌 Sidebar Section -->
+  <div class="documents-sidebar">
+
+    <!-- 📋 My Actions -->
+    <div class="sidebar-box">
+      <div class="collapsible-header" onclick="toggleSection('my-actions-container', 'actions-toggle-icon')">
+        <span><i class="fas fa-clipboard-list text-warning"></i> <strong> My Actions</strong></span>
+        <span id="actions-toggle-icon">▲</span>
+      </div>
+      <div id="my-actions-container" class="collapsible-content actions-body">
+        <div class="no-action">
+          No Outstanding Actions 
+          <i id="refresh-actions" class="fas fa-sync-alt" style="cursor: pointer;" title="Refresh"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔍 Search -->
+    <div class="sidebar-box">
+      <div class="collapsible-header" onclick="toggleSection('search-box', 'search-toggle-icon')">
+        <strong>🔍 Search</strong>
+        <span id="search-toggle-icon">▲</span>
+      </div>
+      <div id="search-box" class="collapsible-content">
+        <form method="get" action="{{ url_for('list_sops') }}">
+          <input type="text" class="form-control mb-2" name="keywords" placeholder="🔎 Keywords" value="{{ request.args.get('keywords', '') }}">
+          <input type="text" class="form-control mb-2" name="content_search" placeholder="📄 Document Content" value="{{ request.args.get('content_search', '') }}">
+          <select name="status" class="form-control mb-2">
+            <option value="">All Status</option>
+            {% for status in status_options %}
+              <option value="{{ status }}" {% if request.args.get('status') == status %}selected{% endif %}>{{ status }}</option>
+            {% endfor %}
+          </select>
+          <select name="owner" class="form-control mb-2">
+            <option value="">Owner</option>
+            {% for owner in owner_options %}
+              <option value="{{ owner }}" {% if request.args.get('owner') == owner %}selected{% endif %}>{{ owner }}</option>
+            {% endfor %}
+          </select>
+          <select name="approver" class="form-control mb-2">
+            <option value="">Approver</option>
+            {% for approver in approver_options %}
+              <option value="{{ approver }}" {% if request.args.get('approver') == approver %}selected{% endif %}>{{ approver }}</option>
+            {% endfor %}
+          </select>
+          <select name="copy_holder" class="form-control mb-3">
+            <option value="">Copy Holder</option>
+            {% for copy in copy_holders %}
+              <option value="{{ copy }}" {% if request.args.get('copy_holder') == copy %}selected{% endif %}>{{ copy }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-primary btn-block">🔍 Search</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 📁 My Searches -->
+    <div class="sidebar-box">
+      <div class="collapsible-header" onclick="toggleSection('my-searches-list', 'toggle-icon')">
+        <strong>📁 Draft SOPs</strong>
+        <span id="toggle-icon">▲</span>
+      </div>
+      <ul class="my-searches collapsible-content" id="my-searches-list" style="max-height: 200px; overflow-y: auto;">
+        {% for sop in draft_sops %}
+          <li><a href="{{ url_for('list_sops') }}#sop-{{ sop.id }}">{{ sop.filename }}</a></li>
+        {% else %}
+          <li>No draft SOPs found.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div> <!-- End of Sidebar -->
+
+  <!-- 🛑 NOW OUTSIDE THE SIDEBAR: -->
+  <div class="documents-main">
+    <form method="get" action="{{ url_for('list_sops') }}" class="documents-search-box">
+      <h1><i class="fas fa-search"></i> Search for SOP Documents</h1>
+      
+      <div class="search-input-wrapper">
+        <i class="fas fa-file-alt"></i>
+        <input type="text" name="search" placeholder="Quick Search for SOP document title or keywords (e.g. GCP, Data)" required>
+      </div>
+
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+</div> <!-- End of documents-container -->
+
+{% if documents %}
+  <div class="documents-results">
+    <h3>Search Results:</h3>
+    <ul class="documents-list">
+      {% for doc in documents %}
+        <li id="sop-{{ doc.id }}">
+          <a href="{{ url_for('download_file', filename=doc.filename) }}">{{ doc.filename }}</a>
+          — Uploaded: {{ doc.date_uploaded.strftime('%Y-%m-%d') }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% elif request.args.get('q') %}
+  <p>No SOP documents found matching "{{ request.args.get('q') }}".</p>
+{% endif %}
+
+<script>
+  function toggleSection(contentId, iconId) {
+    const section = document.getElementById(contentId);
+    const icon = document.getElementById(iconId);
+    const isCollapsed = section.style.display === "none";
+    section.style.display = isCollapsed ? "block" : "none";
+    icon.textContent = isCollapsed ? "▲" : "▼";
+  }
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const links = document.querySelectorAll('#my-searches-list a');
+    links.forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href').substring(1);
+        const target = document.getElementById(targetId);
+
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}
