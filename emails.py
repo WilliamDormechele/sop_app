@@ -84,7 +84,7 @@ def build_password_reset_email(user, random_password, subject="🔒 Password Res
           🔑 {random_password}
         </div>
         <p>Please log in and change it immediately for your account security.</p>
-        <a href="http://127.0.0.1:5000/login" class="button">Login Now</a>
+        <a href="https://sop-app-pg9i.onrender.com/login" class="button">Login Now</a>
         <p style="margin-top: 30px;">If you did not request this reset, please contact the administrator immediately.</p>
       </div>
       <div class="footer">
@@ -188,7 +188,7 @@ def build_welcome_email(user, temporary_password, subject=" 💼 Welcome to NHRC
           Temporary Password: {temporary_password}
         </div>
         <p>Please login and change your password immediately.</p>
-        <a href="http://127.0.0.1:5000/login" class="button">Login Now</a>
+        <a href="https://sop-app-pg9i.onrender.com/login" class="button">Login Now</a>
         <p style="margin-top: 30px;">If you have any issues, please contact NHRC-IT.</p>
       </div>
       <div class="footer"><br>
@@ -236,7 +236,7 @@ def build_sop_assignment_email(user, sop_title, subject="📄 New SOP Assignment
       <p>Dear <strong>{user.username}</strong>,</p>
       <p>You have been assigned a new SOP: <strong>{sop_title}</strong>.</p>
       <p>Please review and acknowledge it.</p>
-      <a href="http://127.0.0.1:5000/login" style="background:#0044cc;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">View SOP</a>
+      <a href="https://sop-app-pg9i.onrender.com/login" style="background:#0044cc;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">View SOP</a>
       <div class="footer"><br>
         Best regards,<br><strong>NHRC SOP Portal Team</strong>
         © 2025 NHRC SOP Portal
@@ -257,7 +257,7 @@ def build_due_reminder_email(user, sop_title, subject="⏰ SOP Due Reminder"):
         <h2 style="color: #ff6600;">{subject}</h2>
         <p>Dear <strong>{user.username}</strong>,</p>
         <p>This is a reminder that your SOP <strong>{sop_title}</strong> is due.</p>
-        <a href="http://127.0.0.1:5000/login" style="background:#ff6600;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">View SOP</a><br>
+        <a href="https://sop-app-pg9i.onrender.com/login" style="background:#ff6600;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">View SOP</a><br>
         <p style="color: #888; font-size: 12px; margin-top: 20px;">NHRC SOP Portal Team</p>
         © 2025 NHRC SOP Portal
       </div>
@@ -277,7 +277,7 @@ def build_amendment_closed_email(user, sop_title, amendment_details, subject="�
         <p>Dear <strong>{user.username}</strong>,</p>
         <p>The amendment for <strong>{sop_title}</strong> has been closed.</p>
         <p><strong>Details:</strong> {amendment_details}</p>
-        <a href="http://127.0.0.1:5000/login" style="background:#28a745;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">View SOP</a><br>
+        <a href="https://sop-app-pg9i.onrender.com/login" style="background:#28a745;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">View SOP</a><br>
         <p style="color: #888; font-size: 12px; margin-top: 20px;">NHRC SOP Portal Team</p>
         © 2025 NHRC SOP Portal
       </div>
@@ -285,7 +285,6 @@ def build_amendment_closed_email(user, sop_title, amendment_details, subject="�
     </html>
     """
 
-# 📩 Amendment Submitted Notification Email
 
 
 # 📩 Amendment Submitted Notification Email
@@ -304,7 +303,7 @@ def build_amendment_submitted_email(user, sop_title, amendment, subject="📩 Am
         <p><strong>Details:</strong> {amendment.details}</p>
         <p><strong>Suggestion:</strong> {amendment.suggestion}</p>
         <p><strong>Status:</strong> {amendment.status.capitalize()}</p>
-        <a href="http://127.0.0.1:5000/login" style="display:inline-block;background:#0044cc;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;margin-top:15px;">View Amendment</a>
+        <a href="https://sop-app-pg9i.onrender.com/login" style="display:inline-block;background:#0044cc;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;margin-top:15px;">View Amendment</a>
         <p style="color: #888; font-size: 12px; margin-top: 20px;">NHRC SOP Portal Team<br>© 2025 NHRC SOP Portal</p>
       </div>
     </body>
