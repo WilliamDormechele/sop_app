@@ -1,6 +1,7 @@
 # -----------------------------
 # 📦 Imports and Configuration
 # -----------------------------
+from flask import send_from_directory
 from emails import build_sop_assignment_email
 from urllib.parse import urlencode  # make sure this is at the top if not already
 from sqlalchemy import func, or_
@@ -41,11 +42,8 @@ from flask import session, redirect, url_for, flash
 from weasyprint import HTML
 from flask import make_response
 import sys
-
-
-
-
-
+import pdfkit
+from flask import send_from_directory
 
 # ✉️ Email Templates
 from emails import (
@@ -2520,31 +2518,30 @@ def bulk_action_users():
     return redirect(url_for('admin_manage_users'))
 
 
-# @app.route('/documentation/pdf')
-# @login_required()
-# def download_documentation_pdf():
-#     from weasyprint import HTML
-#     from flask import make_response
-#     html = render_template('documentation.html')
-#     pdf = HTML(string=html).write_pdf()
-#     response = make_response(pdf)
-#     response.headers['Content-Type'] = 'application/pdf'
-#     response.headers['Content-Disposition'] = 'attachment; filename=documentation.pdf'
-#     return response
-
 @app.route('/download-documentation-pdf')
 @login_required()
 def download_documentation_pdf():
     html = render_template('documentation.html')
-    options = {
-        'enable-local-file-access': ''
-    }
+    options = {'enable-local-file-access': ''}
+    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+
     pdf = pdfkit.from_string(
         html, False, configuration=config, options=options)
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=documentation.pdf'
     return response
+
+
+@app.route('/download-user-manual')
+def download_user_manual():
+    return send_from_directory('static', 'NHRC_SOP_User_Manual.pdf', as_attachment=True)
+
+
+@app.route('/download-training-manual')
+def download_training_manual():
+    return send_from_directory('static', 'NHRC_SOP_Training_Manual.pdf', as_attachment=True)
 
 
 

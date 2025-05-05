@@ -96,14 +96,10 @@
       or visit the <a href="/help" style="color: #2980b9;">Help Center</a> to submit a ticket.
     </p>
   </div>
-
-  <div class="text-center">
-    <a href="{{ url_for('download_training_manual_pdf') }}" 
-       class="btn btn-lg" 
-       style="background-color: #3498db; color: white; font-size: 1.1em; padding: 12px 30px; border-radius: 30px; text-decoration: none;">
-      ⬇️ Download This Manual as PDF
-    </a>
-  </div>
-
+  <div class="text-center mt-4">
+<a href="{{ url_for('download_training_manual') }}" class="btn btn-lg btn-success">
+    ⬇️ Download Training Manual (PDF)
+</a>
+</div>
 </div>
 {% endblock %}
