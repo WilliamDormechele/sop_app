@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}FAQ | NHRC SOP Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">❓ Frequently Asked Questions (FAQs)</h2>
+
+  <div class="accordion" id="faqAccordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq1-heading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+          💬 How do I reset my password 🔓?
+        </button>
+      </h2>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Go to the <code>/login</code> page and click "<a href="{{ url_for('forgot_password') }}">Forgot password page</a>." Follow the instructions to reset it.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq2-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+          💬 Who can upload or approve SOPs ⬆️?
+        </button>
+      </h2>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Only users with the <strong>Admin, Director, or Head of Department (HOD)</strong> role can <strong>upload and approve</strong> SOPs.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq3-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+          💬 How can I raise an amendment 👨‍💻?
+        </button>
+      </h2>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Go to <code>/amendments</code>, select the SOP, provide details, and submit. Admins/HODs will review it and effect the required changes.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq4-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+          💬 How do I contact support 🆘?
+        </button>
+      </h2>
+      <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Submit a support ticket on the <code>/help</code> page or email <a href="mailto:{{ settings.admin_email }}">{{ settings.admin_email }}</a>.
+        </div>
+      </div>
+    </div>
+
+        <div class="accordion-item">
+      <h2 class="accordion-header" id="faq5-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+          💬 How do I download a SOP document ⬇️?
+        </button>
+      </h2>
+      <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Navigate to the SOP list, find the document you need, and click the 📥 Download link next to it.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq6-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+          💬 How can I mark SOPs as read ✅?
+        </button>
+      </h2>
+      <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Select the checkboxes next to the SOPs and click <strong>“✅ Mark selected as Read”</strong><br> ✅ Multiple SOPs can be selected and mark as read.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq7-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+          💬 Who receives amendment notifications 🔔?
+        </button>
+      </h2>
+      <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          Admins, Director, and Heads of Department automatically receive notifications when new amendments are submitted or closed.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq8-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+          💬 How do I change my account password 🔑?
+        </button>
+      </h2>
+      <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          After logging in, go to the <a href="{{ url_for('change_password') }}">Change Password page</a> from your account menu, enter your new password, and save the changes.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="faq9-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
+          💬 What file types can I upload 📄?
+        </button>
+      </h2>
+      <div id="faq9" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+          You can upload <strong>DOC, DOCX, XLS, XLSX</strong> files. Other file types are not allowed.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<br>
+{% endblock %}

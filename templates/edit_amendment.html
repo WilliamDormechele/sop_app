@@ -6,22 +6,22 @@
   <h3>Edit Amendment ({{ amendment.sop.filename }})</h3>
   <form method="post">
     <div class="mb-3">
-      <label>SOP Section</label>
+      <label>SOP Section <span class="text-danger">*</span></label>
       <input type="text" name="sop_section" value="{{ amendment.sop_section }}" class="form-control" required>
     </div>
 
     <div class="mb-3">
-      <label>Details of Requested Amendment</label>
+      <label>Details of Requested Amendment <span class="text-danger">*</span></label>
       <textarea name="details" class="form-control" rows="4" required>{{ amendment.details }}</textarea>
     </div>
 
     <div class="mb-3">
-      <label>Suggested Amendment</label>
+      <label>Suggested Amendment <span class="text-danger">*</span></label>
       <textarea name="suggestion" class="form-control" rows="3">{{ amendment.suggestion }}</textarea>
     </div>
 
     <div class="mb-3">
-      <label>Severity</label>
+      <label>Severity <span class="text-danger">*</span></label>
       <select name="severity" class="form-select" required>
         {% for s in ['any', 'critical', 'high', 'medium', 'low', 'major', 'minor', 'query', 'very high', 'very low'] %}
           <option value="{{ s }}" {% if amendment.severity == s %}selected{% endif %}>{{ s|capitalize }}</option>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="mb-3">
-      <label>Status</label>
+      <label>Status <span class="text-danger">*</span></label>
       <select name="status" class="form-select" required>
         <option value="draft" {% if amendment.status == 'draft' %}selected{% endif %}>Draft</option>
         <option value="final" {% if amendment.status == 'final' %}selected{% endif %}>Final</option>

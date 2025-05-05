@@ -2,17 +2,134 @@
 {% block title %}Assign SOP{% endblock %}
 
 {% block content %}
-<h2>Assign SOP</h2>
 
-<form method="POST" action="{{ url_for('assign_sop') }}">
-  <input type="hidden" name="sop_id" value="{{ sop.id }}">
+<style>
+.assign-container {
+    max-width: 600px;
+    margin: 40px auto;
+}
+.assign-card {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+.assign-card-header {
+    background-color: #0d6efd;
+    color: #fff;
+    padding: 20px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+}
+.assign-card-body {
+    padding: 25px;
+}
+.assign-card-body .form-check {
+    margin-bottom: 12px;
+}
+.assign-card-body .form-check-input {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+.assign-card-body .btn {
+    font-weight: 600;
+    padding: 10px 0;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.assign-card-body .btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+</style>
 
-  <label>Select users to assign:</label><br>
-  {% for user in users %}
-    <input type="checkbox" name="user_ids" value="{{ user.id }}"> {{ user.username }}<br>
-  {% endfor %}
+<div class="assign-container">
+  <div class="assign-card">
+    <div class="assign-card-header">
+      Assign SOP
+    </div>
+    <div class="assign-card-body">
+      <form method="POST" action="{{ url_for('assign_sop') }}">
+        {% for sop in sops %}
+          <input type="hidden" name="sop_ids" value="{{ sop.id }}">
+        {% endfor %}
 
-  <button type="submit" class="btn btn-primary mt-3">Assign SOP</button>
-</form>
+        <!-- Show selected SOPs -->
+      {% if not sops %}
+  <div class="alert alert-warning">⚠ No SOPs selected. Please go back and select at least one.</div>
+{% endif %}
+
+      <div class="mb-3">
+        <h5>Selected SOPs to Assign:</h5>
+        <ul>
+          {% for sop in sops %}
+            <li>{{ sop.filename }} (Category: {{ sop.category }})</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+
+
+        <!-- Search box -->
+        <div class="mb-3">
+          <input type="text" class="form-control" id="searchBox" placeholder="Search users...">
+        </div>
+
+        <!-- Category dropdown -->
+        <div class="mb-3">
+          <label class="form-label">Assign by category (role):</label>
+          <select class="form-select" name="user_role">
+            <option value="">-- Select Role --</option>
+            {% for role in roles %}
+            <option value="{{ role }}">{{ role }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="assign_all" value="1" id="assignAll">
+          <label class="form-check-label" for="assignAll">
+            Assign to all users
+          </label>
+        </div>
+
+        <!-- User checkboxes -->
+        <div class="mb-3" id="userList">
+          <label class="form-label">Select users to assign:<span class="text-danger">*</span></label>
+          {% for user in users %}
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="user_ids" value="{{ user.id }}" id="user{{ user.id }}">
+            <label class="form-check-label" for="user{{ user.id }}">
+              {{ user.username }} ({{ user.role }})
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Assign SOP</button>
+
+        <a href="{{ url_for('assign_success_summary') }}" class="btn btn-success mb-1">
+          📊 View Assigned Summary
+        </a>
+
+        <a href="{{ url_for('list_sops') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('searchBox').addEventListener('input', function() {
+  const search = this.value.toLowerCase();
+  document.querySelectorAll('#userList .form-check').forEach(div => {
+    const text = div.textContent.toLowerCase();
+    div.style.display = text.includes(search) ? '' : 'none';
+  });
+});
+</script>
 
 {% endblock %}

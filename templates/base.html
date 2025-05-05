@@ -38,8 +38,12 @@
   <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
-
-
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
 </head>
 
 <body>
@@ -76,6 +80,26 @@
 .nav-icons a:hover {
   color: #ffc107; /* nice gold hover */
 }
+
+
+/* Make dropdown background match primary color and improve contrast */
+.navbar .dropdown-menu {
+  background-color: var(--primary-color);
+  border: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Make dropdown items white with a gold hover */
+.navbar .dropdown-menu .dropdown-item {
+  color: white;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover {
+  background-color: #ffc107; /* gold hover */
+  color: black;
+  font-weight: 500;
+}
+
 </style>
 
 
@@ -94,67 +118,98 @@
 
 <!-- Navbar -->
 {% if request.endpoint not in ['login', 'forgot_password'] %}
-<nav class="navbar">
-  <div class="nav-wrapper d-flex justify-content-between align-items-center px-3">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: var(--primary-color); top: 114px; z-index: 999;">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="#"> </a>
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <!-- Left: Main Navigation Tabs -->
-    <nav class="top-tabs">
-      <ul class="top-tab-list mb-0">
-        <li class="{% if request.path == '/' %}active{% endif %}">
-          <a href="{{ url_for('home') }}"><i class="bi bi-house-fill"></i> Home</a>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white {% if request.path == '/' %}active{% endif %}" href="{{ url_for('home') }}"><i class="bi bi-house-fill"></i> Home</a>
         </li>
-        <li class="{% if request.path == '/documents' %}active{% endif %}">
-          <a href="{{ url_for('documents_page') }}"><i class="bi bi-folder-fill"></i> Documents</a>
+        <li class="nav-item ">
+          <a class="nav-link text-white {% if request.path == '/documents' %}active{% endif %}" href="{{ url_for('documents_page') }}"><i class="bi bi-folder-fill"></i> Documents</a>
         </li>
-        <li class="{% if request.path == '/sops' %}active{% endif %}">
-          <a href="{{ url_for('list_sops') }}"><i class="bi bi-file-earmark-text"></i> View SOPs</a>
+        <li class="nav-item ">
+          <a class="nav-link text-white {% if request.path == '/sops' %}active{% endif %}" href="{{ url_for('list_sops') }}"><i class="bi bi-file-earmark-text"></i> View SOPs</a>
         </li>
-        <li class="{% if request.path == '/upload' %}active{% endif %}">
-          <a href="{{ url_for('upload_file') }}"><i class="bi bi-cloud-upload-fill"></i> Upload SOP</a>
+        <li class="nav-item ">
+          <a class="nav-link text-white {% if request.path == '/upload' %}active{% endif %}" href="{{ url_for('upload_file') }}"><i class="bi bi-cloud-upload-fill"></i> Upload SOP</a>
         </li>
-        <li class="{% if request.path == '/dashboard' %}active{% endif %}">
-          <a href="{{ url_for('dashboard') }}"><i class="bi bi-graph-up"></i> Dashboard</a>
+        <li class="nav-item ">
+          <a class="nav-link text-white {% if request.path == '/dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}"><i class="bi bi-graph-up"></i> Dashboard</a>
         </li>
-        <li class="{% if request.endpoint == 'amendments_page' %}active{% endif %}">
-          <a href="{{ url_for('amendments_page') }}">✏️ Amendments
+        <li class="nav-item ">
+          <a class="nav-link text-white {% if request.endpoint == 'amendments_page' %}active{% endif %}" href="{{ url_for('amendments_page') }}">✏️ Amendments
             {% if pending_amendments_count and pending_amendments_count > 0 %}
               <span class="badge bg-danger">{{ pending_amendments_count }}</span>
             {% endif %}
           </a>
         </li>
-        <li class="{% if request.endpoint == 'help_page' %}active{% endif %}">
-          <a href="{{ url_for('help_page') }}"><i class="fas fa-question-circle"></i> Help</a>
+
+        {# <li class="nav-item ">
+          <a class="nav-link text-white {% if request.endpoint == 'documentation_page' %}active{% endif %}" href="{{ url_for('documentation_page') }}"><i class="fas fa-book"></i> Documentations</a>
+        </li> #}
+
+        <li class="nav-item dropdown {% if request.endpoint in ['documentation_page', 'user_manual', 'training_manual', 'api_docs'] %}active{% endif %}">
+          <a class="nav-link dropdown-toggle text-white {% if request.endpoint in ['documentation_page', 'user_manual', 'training_manual', 'api_docs'] %}active{% endif %}" 
+            href="#" id="navbarDocumentation" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-book"></i> Documentation
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('documentation_page') }}">📘 Documentation</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('user_manual') }}">👤 User Manual</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('training_manual') }}">👩‍🏫 Training Manual</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('api_docs') }}">🔑 API Docs</a></li>
+          </ul>
         </li>
-        <li class="{% if request.endpoint == 'documentation_page' %}active{% endif %}">
-          <a href="{{ url_for('documentation_page') }}"><i class="fas fa-book"></i> Docs</a>
+
+        <li class="nav-item ">
+          <a class="nav-link text-white {% if request.endpoint == 'help_page' %}active{% endif %}" href="{{ url_for('help_page') }}"><i class="fas fa-question-circle"></i> Help</a>
         </li>
-        <!-- Add Admin link only for admins -->
-        {% if session.get('role') == 'admin' %}
-        <li class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
-          <a href="{{ url_for('admin_dashboard') }}"></i> 🛡 Admin</a>
-        </li>
+
+        {% if session.get('role') == 'Admin' %}
+        <li class="nav-item">
+        <a class="nav-link text-white {% if request.endpoint in ['admin_dashboard', 'admin_manage_users', 'admin_logs', 'audit_log', 'register', 'admin_send_notification', 'admin_api_keys', 'admin_settings', 'support_tickets'] %}active{% endif %}" 
+          href="{{ url_for('admin_dashboard') }}">
+          🛡 Admin</a>
+        </li>        
+        {#<li class="nav-item ">
+          <a class="nav-link text-white {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">🛡 Admin</a>
+        </li> #}
         {% endif %}
       </ul>
-    </nav>
-
+    </div>
   </div>
 </nav>
 {% endif %}
 
 
+
 <!-- ✅ Content Block -->
 <main class="content">
+  {% block content %}{% endblock %}
+</main>
+{# <main class="content">
   <div class="page-wrapper">
     {% block content %}{% endblock %}
   </div>
-</main>
+</main> #}
+
+
+
 
 <!-- Footer -->
 <footer class="footer mt-auto" style="background-color: var(--primary-color); color: white; padding: 5px 10px; font-size: 13px; margin-top: auto;">
   <div class="container d-flex justify-content-between align-items-center" style="flex-wrap: wrap; position: relative;">
     <div class="footer-center" style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">
-      <p class="mb-1">© {{ current_year }} Navrongo Health Research Centre</p>
-      <p style="font-size: 12px;">Developed 👨‍💻 by <strong>William Dormechele</strong></p>
+      <p class="mb-1">© {{ current_year }} Navrongo Health Research Centre | All Rights Reserved</p>
+      <p style="font-size: 12px;">Developer 👨‍💻:DM-NHRC</p>
     </div>
     <div class="footer-right" style="text-align: right;">
       <p class="mb-1">NHRC eSOP Web Portal</p>
@@ -259,5 +314,26 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<button onclick="startTour()" class="btn btn-info">👣 Start Guided Tour</button>
+<script>
+  function startTour() {
+    introJs().setOptions({
+      steps: [
+        { intro: "Welcome to the NHRC SOP Portal!" },
+        { element: document.querySelector('#navigation'), intro: "Here is your quick navigation guide." },
+        { element: document.querySelector('#workflow'), intro: "This explains each process step-by-step." }
+      ]
+    }).start();
+  }
+</script>
+
+<script>
+function toggleMenu() {
+  document.querySelector('.top-tab-list').classList.toggle('show');
+}
+</script>
+
+
 </body>
 </html>

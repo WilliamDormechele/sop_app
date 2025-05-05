@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Assignment Success{% endblock %}
+
+{% block content %}
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% if show_alert %}
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Success!',
+  text: 'SOP(s) assigned successfully to users!',
+  confirmButtonText: 'OK'
+});
+</script>
+{% endif %}
+
+
+
+
+<div class="container mt-5">
+  <h3 class="mb-4">Assigned Users Summary</h3>
+
+<div class="mb-3">
+  {% if sop_id %}
+    <a href="{{ url_for('export_assigned_users', sop_id=sop_id) }}" class="btn btn-success me-2">
+        📥 Export to Excel
+    </a>
+  {% endif %}
+
+  {% if sop_ids %}
+    <a href="{{ url_for('assign_page') }}?{% for id in sop_ids %}sop_ids={{ id }}&{% endfor %}" class="btn btn-secondary">
+      🔙 Back to Assign Page
+    </a>
+  {% elif sop_id %}
+    <a href="{{ url_for('assign_page') }}?sop_ids={{ sop_id }}" class="btn btn-secondary">
+      🔙 Back to Assign Page
+    </a>
+  {% else %}
+    <a href="{{ url_for('list_sops') }}" class="btn btn-secondary">
+      🔙 Back to SOP List
+    </a>
+  {% endif %}
+</div>
+
+
+
+<table id="assignTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Category</th>
+            <th>SOP Name</th>
+            <th>Date Assigned</th>
+            <th>Assigned By</th>
+            <th>Read Status</th>
+            <th>Date Read</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in assigned_users %}
+        <tr>
+            <td>{{ user.user.username if user.user else '' }}</td>
+            <td>{{ user.user.role if user.user else '' }}</td>
+            <td>{{ user.sop.filename if user.sop else '' }}</td>
+            <td>{% if user.date_assigned %}{{ user.date_assigned.strftime('%Y-%m-%d %H:%M:%S') }}{% else %}-{% endif %}</td>
+            <td>{{ user.assigned_by if user.assigned_by else '' }}</td>
+            <td>{{ 'Read' if user.acknowledged else 'Unread' }}</td>
+            <td>{% if user.date_read %}{{ user.date_read.strftime('%Y-%m-%d %H:%M:%S') }}{% else %}-{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+</div>
+
+<!-- DataTables JS & CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  $('#assignTable').DataTable({
+    order: [[3, 'desc']],
+    pageLength: 10
+  });
+});
+</script>
+
+{% endblock %}

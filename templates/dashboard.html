@@ -279,25 +279,63 @@ function renderCharts(data) {
   });
 
   // Amendments Chart
-  const amendCtx = document.getElementById('amendmentsChart').getContext('2d');
-  amendmentsChart?.destroy();
-  amendmentsChart = new Chart(amendCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Raised', 'Closed'],
-      datasets: [{
-        data: [data.amendments_raised, data.amendments_closed],
-        backgroundColor: ['#6610f2', '#198754']
-      }]
+const amendCtx = document.getElementById('amendmentsChart').getContext('2d');
+amendmentsChart?.destroy();
+amendmentsChart = new Chart(amendCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Amendments'],
+    datasets: [
+      {
+        label: 'Raised',  // ✅ will appear in legend
+        data: [data.amendments_raised],
+        backgroundColor: '#6610f2',
+        borderRadius: 10
+      },
+      {
+        label: 'Closed',  // ✅ will appear in legend
+        data: [data.amendments_closed],
+        backgroundColor: '#198754',
+        borderRadius: 10
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 1200,
+      easing: 'easeOutBounce'
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 1200 },
-      scales: { y: { beginAtZero: true } },
-      plugins: { tooltip: { enabled: true } }
+    hover: {
+      mode: 'index',
+      intersect: false
+    },
+    scales: {
+      y: { beginAtZero: true }
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          boxWidth: 20,
+          padding: 15
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const total = data.amendments_raised + data.amendments_closed;
+            const value = context.raw;
+            const percentage = total ? ((value / total) * 100).toFixed(1) : 0;
+            return `${context.dataset.label}: ${value} (${percentage}%)`;
+          }
+        }
+      }
     }
-  });
+  }
+});
+
 
   // SOPs by Category Chart
   const catCtx = document.getElementById('categoryChart').getContext('2d');

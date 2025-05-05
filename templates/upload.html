@@ -13,27 +13,86 @@
       <div class="card-body">
         <form method="post" enctype="multipart/form-data">
 
-  <form method="POST" enctype="multipart/form-data" class="upload-form">
-    <label for="file">Select File:</label><br>
-    <input type="file" id="file" name="file" required><br><br>
-
-    <label for="category">Choose Category:</label><br>
-    <select id="category" name="category" required>
-        <option value="">--Select--</option>
-        <option value="HR">HR</option>
-        <option value="Finance">Finance</option>
-        <option value="Lab">Lab</option>
-        <option value="Admin">Admin</option>
-        <option value="Dsd">Data Science</option>
-        <option value="Csd">Clinical Science</option>
-        <option value="Ssd">Social Science</option>
-    </select><br><br>
-
+<form method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+  <label for="file"><strong>Select Files (you can select multiple):</strong><span class="text-danger">*</span></label><br><p style="color: blue;">(Allowed Formats → .docx, .xlsx, .pdf)</p>
+  <input type="file" id="file" name="files" multiple required><br>
+<ul id="fileList"></ul>
+  <label for="category"><strong>Choose Category:</strong><span class="text-danger">*</span></label><br>
+  <select id="category" name="category" required>
+      <option value="">--Select--</option>
+      <option value="Administration">Administration</option>
+      <option value="IRB">Institutional Review Board</option>
+      <option value="NHDSS">Navrongo HDSS</option>
+      <option value="Communication">Communication Unit</option>
+      <option value="Biomedical Science">Biomedical Science</option>
+      <option value="Data Science">Data Science</option>
+      <option value="Clinical Science">Clinical Science</option>
+      <option value="Social Science">Social Science</option>
+  </select>
+  <small id="multiNote" class="text-info d-none">Note: All selected files will use the same category. To assign different categories, upload them one by one.</small>
+  <br><br>
     <label for="subcategory">Subcategory (optional):</label><br>
-    <input type="text" id="subcategory" name="subcategory"><br><br>
+    <input type="text" id="subcategory" name="subcategory"><br>
+  
+  <button type="submit" id="uploadBtn">📤 Upload</button>
+</form>
 
-    <button type="submit">📤 Upload</button>
-  </form>
+<div class="progress mt-3 d-none">
+  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+</div>
+
+<script>
+document.getElementById('file').addEventListener('change', function() {
+  const files = this.files;
+  const fileList = document.getElementById('fileList');
+  const multiNote = document.getElementById('multiNote');
+  fileList.innerHTML = '';
+  if (files.length > 1) {
+    multiNote.classList.remove('d-none');
+  } else {
+    multiNote.classList.add('d-none');
+  }
+  Array.from(files).forEach((file, index) => {
+    const li = document.createElement('li');
+    li.textContent = file.name + ' ';
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '❌ Remove';
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-sm btn-danger';
+    removeBtn.onclick = function() {
+      const dataTransfer = new DataTransfer();
+      Array.from(files).forEach((f, i) => {
+        if (i !== index) dataTransfer.items.add(f);
+      });
+      document.getElementById('file').files = dataTransfer.files;
+      document.getElementById('file').dispatchEvent(new Event('change'));
+    };
+    li.appendChild(removeBtn);
+    fileList.appendChild(li);
+  });
+});
+
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const progress = document.querySelector('.progress');
+  const progressBar = document.querySelector('.progress-bar');
+  progress.classList.remove('d-none');
+  progressBar.style.width = '0%';
+  const interval = setInterval(() => {
+    let width = parseInt(progressBar.style.width);
+    if (width >= 100) {
+      clearInterval(interval);
+      form.submit();
+    } else {
+      progressBar.style.width = width + 10 + '%';
+    }
+  }, 200);
+});
+</script>
+
+
+
       </div>
     </div>
 

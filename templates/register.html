@@ -4,7 +4,7 @@
 <style>
 .register-container {
     max-width: 600px;
-    margin: 40px auto;
+    margin: 0px auto;   /* ✅ reduced from 40px */
     padding: 30px;
     background: #ffffff;
     border-radius: 10px;
@@ -36,6 +36,7 @@
 }
 </style>
 
+
 <div class="register-container">
   <div class="register-header">
     <h2>📝 Create New Account</h2>
@@ -54,30 +55,53 @@
 
   <form method="POST">
     <div class="mb-3">
-      <label for="username" class="form-label">Username:</label>
+      <label for="fullname" class="form-label">Full Name:<span class="text-danger">*</span></label>
+      <input type="text" name="fullname" id="fullname" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="username" class="form-label">Username:<span class="text-danger">*</span></label>
       <input type="text" name="username" id="username" class="form-control" required>
     </div>
 
     <div class="mb-3">
-      <label for="email" class="form-label">Email:</label>
+      <label for="email" class="form-label">Email:<span class="text-danger">*</span></label>
       <input type="email" name="email" id="email" class="form-control" required>
     </div>
 
-    <div class="mb-3">
+{#    <div class="mb-3">
       <label for="role" class="form-label">Role:</label>
       <select name="role" id="role" class="form-select" required>
         <option disabled selected>Select a Role</option>
         <option value="admin">Admin</option>
         <option value="director">Director</option>
         <option value="hod">HoD</option>
-        <option value="ro">Research Officer</option>
-        <option value="ra">Research Assistant</option>
+        <option value="researchofficer">Research Officer</option>
+        <option value="rassistant">Research Assistant</option>
         <option value="nss">National Service Personnel</option>
         <option value="guest">Guest</option>
         <option value="monitor">Monitor</option>
-        <option value="js">Junior Staff</option>
+        <option value="jnrstaff">Junior Staff</option>
       </select>
     </div>
+#}
+    
+    <div class="mb-3">
+      <label for="role" class="form-label">Role:<span class="text-danger">*</span></label>
+      <select name="role" id="role" class="form-select" required>
+        <option disabled selected>Select a Role</option>
+        <option value="Admin">Admin</option>
+        <option value="Director">Director</option>
+        <option value="Head of Department">Head of Department</option>
+        <option value="Research Officer">Research Officer</option>
+        <option value="Research Assistant">Research Assistant</option>
+        <option value="National Service Personnel">National Service Personnel</option>
+        <option value="Guest">Guest</option>
+        <option value="Monitor">Monitor</option>
+        <option value="Junior Staff">Junior Staff</option>
+      </select>
+      </div>
+
 
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-success">➕ Register User</button>

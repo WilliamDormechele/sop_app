@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}API Documentation | NHRC SOP Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">🔑 NHRC SOP Portal — API Documentation</h1>
+
+  <p>This page provides an overview of the REST API endpoints available in the NHRC SOP Portal. All endpoints require an <strong>API Key</strong> passed in the <code>Authorization</code> header.</p>
+
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">📌 Base URL</div>
+    <div class="card-body">
+      <code>https://your-domain.com/api/v1/</code>
+    </div>
+  </div>
+
+  <h4>📂 Endpoints</h4>
+
+  <div class="accordion" id="apiAccordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="users-heading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#users">
+          🔹 GET /sops
+        </button>
+      </h2>
+      <div id="users" class="accordion-collapse collapse show" data-bs-parent="#apiAccordion">
+        <div class="accordion-body">
+          <p>Retrieve a list of all SOPs.</p>
+          <pre><code>GET /api/v1/sops</code></pre>
+          <strong>Headers:</strong>
+          <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+          <strong>Response:</strong>
+          <pre>{
+  "sops": [
+    {"id": 1, "title": "Fire Safety", "status": "Approved"},
+    {"id": 2, "title": "Infection Control", "status": "Draft"}
+  ]
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="single-sop-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#single-sop">
+          🔹 GET /sops/&lt;id&gt;
+        </button>
+      </h2>
+      <div id="single-sop" class="accordion-collapse collapse" data-bs-parent="#apiAccordion">
+        <div class="accordion-body">
+          <p>Retrieve details of a specific SOP.</p>
+          <pre><code>GET /api/v1/sops/1</code></pre>
+          <strong>Response:</strong>
+          <pre>{
+  "id": 1,
+  "title": "Fire Safety",
+  "status": "Approved",
+  "owner": "admin",
+  "file_url": "/download/fire_safety.pdf"
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="submit-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#submit">
+          🔹 POST /support
+        </button>
+      </h2>
+      <div id="submit" class="accordion-collapse collapse" data-bs-parent="#apiAccordion">
+        <div class="accordion-body">
+          <p>Submit a support ticket.</p>
+          <pre><code>POST /api/v1/support</code></pre>
+          <strong>Body (JSON):</strong>
+          <pre>{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "subject": "Issue with upload",
+  "message": "Details about the issue..."
+}</pre>
+          <strong>Response:</strong>
+          <pre>{
+  "ticket_id": "ABC123",
+  "status": "submitted"
+}</pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <h4 class="mt-4">📌 Notes</h4>
+  <ul>
+    <li>All API calls require <code>Authorization: Bearer YOUR_API_KEY</code>.</li>
+    <li>Rate limit: 100 requests per hour.</li>
+    <li>Contact <a href="mailto:{{ settings.admin_email }}">{{ settings.admin_email }}</a> for API key requests or questions.</li>
+  </ul>
+</div>
+{% endblock %}

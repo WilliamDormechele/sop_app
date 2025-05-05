@@ -54,29 +54,54 @@
 
   </div>
 
-  <!-- ✉️ Contact Support Section -->
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <h3 class="card-title">📨 Still Need Help?</h3>
-      <p>If you can't find an answer in the FAQs, please send us a support message.</p>
-      
-<form method="POST" action="{{ url_for('submit_support_ticket') }}" class="row g-3">
-  <div class="col-md-6">
-    <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+<!-- ✉️ Contact Support Section -->
+<div class="card shadow border-0" style="border-radius: 12px;">
+  <div class="card-body p-4">
+    <h3 class="card-title text-primary mb-3 text-center" style="font-weight: 600;">
+      📨 Still Need Help?
+    </h3>
+    <p class="text-muted mb-4 text-center" style="font-size: 0.95rem;">
+      If you can’t find an answer in the FAQs, send us a message and we’ll get back to you promptly.
+    </p>
+
+    <form method="POST" action="{{ url_for('submit_support_ticket') }}" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Your Name <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control rounded-pill" placeholder="Enter your name" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Your Email <span class="text-danger">*</span></label>
+        <input type="email" name="email" class="form-control rounded-pill" placeholder="Enter your email" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Subject <span class="text-danger">*</span></label>
+        <input type="text" name="subject" class="form-control rounded-pill" placeholder="Enter subject" required>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Message <span class="text-danger">*</span></label>
+        <textarea name="message" class="form-control" rows="5" placeholder="Describe your issue or question..." required style="border-radius: 12px;"></textarea>
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary w-50" style="border-radius: 50px; font-weight: 600; transition: transform 0.2s;">
+          🚀 Send Support Request
+        </button>
+      </div>
+    </form>
   </div>
-  <div class="col-md-6">
-    <input type="email" name="email" class="form-control" placeholder="Your Email" required>
-  </div>
-  <div class="col-12">
-    <input type="text" name="subject" class="form-control" placeholder="Subject" required>
-  </div>
-  <div class="col-12">
-    <textarea name="message" class="form-control" rows="5" placeholder="Describe your issue or question..." required></textarea>
-  </div>
-  <div class="col-12 text-center">
-    <button type="submit" class="btn btn-primary w-50">🚀 Send Support Request</button>
-  </div>
-</form>
+</div>
+
+<!-- Optional hover effect -->
+<script>
+document.querySelector('button[type="submit"]').addEventListener('mouseover', function() {
+  this.style.transform = 'scale(1.05)';
+});
+document.querySelector('button[type="submit"]').addEventListener('mouseout', function() {
+  this.style.transform = 'scale(1)';
+});
+</script>
+
+
+<span class="text-danger">*</span>
 
     </div>
   </div>

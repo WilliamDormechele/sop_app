@@ -61,8 +61,8 @@
 <div class="row">
 
   <!-- Support Tickets Summary -->
-  <div class="col-md-4 mb-4">
-    <div class="card border-primary shadow h-100 py-2">
+  <div class="col-md-3 mb-4">
+    <div class="card h-70 border-primary shadow">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
@@ -84,8 +84,8 @@
   </div>
 
   <!-- Total Tickets -->
-  <div class="col-md-4">
-    <div class="card text-center mb-4">
+  <div class="col-md-3 mb-4">
+    <div class="card h-70 text-center">
       <div class="card-body">
         <h5 class="card-title">📨 Total Tickets</h5>
         <h2 class="text-primary">{{ total_tickets }}</h2>
@@ -94,8 +94,8 @@
   </div>
 
   <!-- Open Tickets -->
-  <div class="col-md-4">
-    <div class="card text-center mb-4">
+  <div class="col-md-3 mb-4">
+    <div class="card h-70 text-center">
       <div class="card-body">
         <h5 class="card-title">🟢 Open Tickets</h5>
         <h2 class="text-success">{{ open_tickets }}</h2>
@@ -104,8 +104,8 @@
   </div>
 
   <!-- Closed Tickets -->
-  <div class="col-md-4">
-    <div class="card text-center mb-4">
+  <div class="col-md-3 mb-4">
+    <div class="card h-70 text-center">
       <div class="card-body">
         <h5 class="card-title">🔴 Closed Tickets</h5>
         <h2 class="text-danger">{{ closed_tickets }}</h2>
@@ -114,6 +114,7 @@
   </div>
 
 </div>
+
 
 <!-- Pie Charts -->
 <div class="row">
@@ -172,22 +173,48 @@ const visitsChart = new Chart(document.getElementById('visitsChart'), {
   }
 });
 
+// Dynamically generate unique colors for roles
+function generateColors(count) {
+  const colors = [];
+  for (let i = 0; i < count; i++) {
+    const hue = Math.floor((360 / count) * i);
+    colors.push(`hsl(${hue}, 70%, 50%)`);
+  }
+  return colors;
+}
 
 // Roles Chart
+const labels = {{ role_labels|tojson }};
+const counts = {{ role_counts|tojson }};
+const colors = generateColors(labels.length);
+
 const rolesChart = new Chart(document.getElementById('rolesChart'), {
   type: 'pie',
   data: {
-    labels: ['Admin', 'HOD', 'User'],
+    labels: labels,
     datasets: [{
-      data: {{ role_counts|tojson }},
-      backgroundColor: ['#1c4ca4', '#28a745', '#ffc107']
+      data: counts,
+      backgroundColor: colors
     }]
   },
   options: {
-    responsive: true
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            return `${label}: ${value}`;
+          }
+        }
+      }
+    }
   }
 });
 </script>
+
 
 <script>
 // Pending vs Resolved (ticketsPieChart1)

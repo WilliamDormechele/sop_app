@@ -33,7 +33,6 @@
           <option value="delete_sop">Delete SOP</option>
           <option value="amendment">Amendment</option>
         </select>
-        <input type="text" id="dateRange" class="form-control" placeholder="Select Date Range">
       </div>
     </div>
   </div>
@@ -89,23 +88,48 @@ $(document).ready(function() {
       }
     });
 
-    $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
-      $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-          var min = picker.startDate;
-          var max = picker.endDate;
-          var date = moment(data[3], "DD-MMM-YYYY HH:mm");
-          if ((min == null && max == null) ||
-              (min == null && date <= max) ||
-              (min <= date && max == null) ||
-              (min <= date && date <= max)) {
-            return true;
-          }
-          return false;
-        }
-      );
-      table.draw();
-    });
+$(function() {
+  $('#dateRange').daterangepicker({
+    autoUpdateInput: false,
+    locale: {
+      cancelLabel: 'Clear'
+    }
+  });
+
+  $('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+  });
+
+  $('#dateRange').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+  });
+});
+
+
+$('#dateRange').on('apply.daterangepicker', function(ev, picker) {
+  $.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+      var min = picker.startDate;
+      var max = picker.endDate;
+      var date = moment(data[3], "DD-MMM-YYYY HH:mm");
+      var action = data[1]; // Action column
+      if (action !== 'login') {
+        return true; // skip filtering for non-login actions
+      }
+      if ((min == null && max == null) ||
+          (min == null && date <= max) ||
+          (min <= date && max == null) ||
+          (min <= date && date <= max)) {
+        return true;
+      }
+      return false;
+    }
+  );
+  table.draw();
+});
+
+
+
 
     $('#dateRange').on('cancel.daterangepicker', function(ev, picker) {
       $(this).val('');

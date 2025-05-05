@@ -3,41 +3,37 @@
 
 {% block admin_content %}
 
-<div class="admin-card">
-  <h3>⚙️ Portal Settings</h3>
-  <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+<div class="card shadow border-0 p-4 mb-4" style="border-radius: 12px;">
+  <h3 class="text-primary fw-bold mb-3">
+    ⚙️ Portal Settings
+  </h3>
+  <form method="POST" enctype="multipart/form-data" class="needs-validation row g-3" novalidate>
 
     <!-- Portal Name -->
-    <div class="mb-3">
-      <label for="portal_name" class="form-label">Portal Name</label>
-      <input type="text" class="form-control" id="portal_name" name="portal_name" value="{{ settings.portal_name if settings else '' }}" required>
+    <div class="col-md-6">
+      <label for="portal_name" class="form-label">Portal Name <span class="text-danger">*</span></label>
+      <input type="text" class="form-control rounded-pill" id="portal_name" name="portal_name" value="{{ settings.portal_name if settings else '' }}" required placeholder="Enter portal name">
     </div>
 
     <!-- Admin Email -->
-    <div class="mb-3">
-      <label for="admin_email" class="form-label">Admin Email</label>
-      <input type="email" class="form-control" id="admin_email" name="admin_email" value="{{ settings.admin_email if settings else '' }}" required>
+    <div class="col-md-6">
+      <label for="admin_email" class="form-label">Admin Email <span class="text-danger">*</span></label>
+      <input type="email" class="form-control rounded-pill" id="admin_email" name="admin_email" value="{{ settings.admin_email if settings else '' }}" required placeholder="Enter admin email">
     </div>
 
     <!-- Portal Logo Upload -->
-    <div class="mb-3">
+    <div class="col-12">
       <label for="logo_upload" class="form-label">Portal Logo</label>
-      {% if settings and settings.logo_filename %}
       <div class="mb-2">
-        <img id="logoPreview" src="{{ url_for('static', filename='uploads/' + settings.logo_filename) }}" alt="Current Logo" style="height: 80px; object-fit: contain;">
+        <img id="logoPreview" src="{{ url_for('static', filename='uploads/' + settings.logo_filename) if settings and settings.logo_filename else url_for('static', filename='default_logo.png') }}" alt="Logo Preview" style="height: 80px; object-fit: contain; border: 1px solid #ddd; padding: 5px; border-radius: 8px;">
       </div>
-      {% else %}
-      <div class="mb-2">
-        <img id="logoPreview" src="{{ url_for('static', filename='default_logo.png') }}" alt="Logo Preview" style="height: 80px; object-fit: contain;">
-      </div>
-      {% endif %}
       <input type="file" class="form-control" id="logo_upload" name="logo_upload" onchange="previewLogo(this)">
     </div>
 
     <!-- Theme Color -->
-    <div class="mb-3">
-      <label for="theme_color" class="form-label">Theme Color</label>
-      <select class="form-select" id="theme_color" name="theme_color" onchange="updatePreviewColor()" required>
+    <div class="col-md-6">
+      <label for="theme_color" class="form-label">Theme Color <span class="text-danger">*</span></label>
+      <select class="form-select rounded-pill" id="theme_color" name="theme_color" onchange="updatePreviewColor()" required>
         <option value="Blue" {% if settings and settings.theme_color == 'Blue' %}selected{% endif %}>Blue</option>
         <option value="Green" {% if settings and settings.theme_color == 'Green' %}selected{% endif %}>Green</option>
         <option value="Red" {% if settings and settings.theme_color == 'Red' %}selected{% endif %}>Red</option>
@@ -46,24 +42,30 @@
     </div>
 
     <!-- Enable Registration -->
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="enable_registration" name="enable_registration" {% if settings and settings.enable_registration %}checked{% endif %}>
-      <label class="form-check-label" for="enable_registration">
-        Enable Public Registration
-      </label>
+    <div class="col-md-6 d-flex align-items-end">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="enable_registration" name="enable_registration" {% if settings and settings.enable_registration %}checked{% endif %}>
+        <label class="form-check-label" for="enable_registration">
+          Enable Public Registration
+        </label>
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100">Save Settings</button>
+    <!-- Submit Button -->
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary w-100 py-2" style="border-radius: 50px; font-weight: 600; transition: transform 0.2s;">
+        💾 Save Settings
+      </button>
+    </div>
 
     <!-- Live Color Preview Box -->
-    <div id="colorPreview" class="mt-4 p-3 text-white text-center rounded" style="background-color: #1c4ca4;">
+    <div id="colorPreview" class="mt-4 p-3 text-white text-center rounded shadow-sm" style="background-color: #1c4ca4;">
       Color Preview
     </div>
   </form>
 </div>
 
 <script>
-// Preview selected logo immediately
 function previewLogo(input) {
   const file = input.files[0];
   if (file) {
@@ -75,18 +77,15 @@ function previewLogo(input) {
   }
 }
 
-// Update color preview box based on selection
 function updatePreviewColor() {
   const color = document.getElementById('theme_color').value;
   const preview = document.getElementById('colorPreview');
-
   const colorMap = {
     "Blue": "#1c4ca4",
     "Green": "#28a745",
     "Red": "#dc3545",
     "Dark": "#343a40"
   };
-
   preview.style.backgroundColor = colorMap[color] || '#1c4ca4';
 }
 </script>

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}User Training Manual | NHRC SOP Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <h1 class="mb-4 text-center">📘 <strong>NHRC SOP Portal — User Training Manual</strong></h1>
+
+  <p class="lead text-center">
+    Welcome to the NHRC SOP Portal! This user manual is designed to help you navigate the system with confidence, whether you are a general user, department head, or system administrator.
+  </p>
+
+  <hr class="my-4">
+
+  <h4>1️⃣ <strong>Introduction</strong></h4>
+  <p>
+    The NHRC SOP Portal is a centralized platform for managing, accessing, and tracking Standard Operating Procedures (SOPs). This manual provides a step-by-step guide to help you carry out common tasks efficiently and in line with organizational best practices.
+  </p>
+
+  <h4>2️⃣ <strong>Logging In</strong></h4>
+  <ul>
+    <li>Visit the <code>/login</code> page on the portal.</li>
+    <li>Enter your <strong>username</strong> and <strong>password</strong> in the provided fields.</li>
+    <li>If it’s your first time logging in or after a password reset, you will be prompted to set a new password — follow the on-screen instructions.</li>
+    <li>If you encounter login issues, use the “Forgot Password” link or contact the system administrator.</li>
+  </ul>
+
+  <h4>3️⃣ <strong>Browsing and Accessing SOPs</strong></h4>
+  <ul>
+    <li>Navigate to <code>/documents</code> to view the complete SOP library.</li>
+    <li>Use the advanced filters to search by <em>status</em>, <em>owner</em>, <em>category</em>, or <em>keywords</em> for efficient browsing.</li>
+    <li>Click the 📥 (<strong>Download</strong>) button to save a copy of an SOP.</li>
+    <li>Click the ✅ (<strong>Mark as Read</strong>) button to acknowledge that you have read and understood the SOP.</li>
+  </ul>
+
+  <h4>4️⃣ <strong>Uploading and Approving SOPs (Admin & HOD Roles)</strong></h4>
+  <ul>
+    <li>Go to <code>/upload</code> to submit a new SOP.</li>
+    <li>Complete the required fields, including <em>category</em>, <em>subcategory</em>, and <em>file selection</em>.</li>
+    <li>After uploading, navigate to <code>/sops</code> to review, approve, or delete SOP drafts.</li>
+    <li>Only approved SOPs will be visible to general users.</li>
+  </ul>
+
+  <h4>5️⃣ <strong>Raising and Managing Amendments</strong></h4>
+  <ul>
+    <li>Navigate to <code>/amendments</code> to log a new amendment request.</li>
+    <li>Select the relevant SOP, provide the affected section, describe the issue in detail, and suggest improvements.</li>
+    <li>Admins and HODs will review, discuss, and finalize amendments in <strong>Stage 2</strong> of the process.</li>
+  </ul>
+
+  <h4>6️⃣ <strong>Viewing Notifications</strong></h4>
+  <ul>
+    <li>Stay updated with system changes via email alerts and in-app notifications.</li>
+    <li>Look for admin announcements on your dashboard or in the notification center.</li>
+  </ul>
+
+  <h4>7️⃣ <strong>Submitting Support Tickets</strong></h4>
+  <ul>
+    <li>Visit <code>/help</code> to access the support page.</li>
+    <li>Fill out the form with your <em>name</em>, <em>email</em>, <em>subject</em>, and <em>message</em>.</li>
+    <li>You will receive a ticket ID to track the status of your inquiry.</li>
+  </ul>
+
+  <h4>8️⃣ <strong>Admin Panel Features</strong></h4>
+  <ul>
+    <li>Manage users: create accounts, assign roles, suspend users, or reset passwords.</li>
+    <li>Monitor system activity using the <strong>Audit Log</strong> to track actions and changes.</li>
+    <li>Configure system settings and manage API keys through the <strong>Admin Panel</strong>.</li>
+  </ul>
+
+  <h4>✅ <strong>Best Practices and Tips</strong></h4>
+  <ul>
+    <li>Choose a secure, unique password and change it periodically.</li>
+    <li>Regularly review and mark SOPs as read to stay compliant with organizational standards.</li>
+    <li>Submit amendment requests proactively when you identify issues or improvement opportunities.</li>
+    <li>Check notifications regularly for tasks or system updates.</li>
+    <li>Log out after each session, especially on shared devices.</li>
+  </ul>
+
+  <div class="alert alert-info mt-4">
+    <strong>Need further assistance?</strong> Contact the system administrator at <a href="mailto:{{ settings.admin_email }}">{{ settings.admin_email }}</a> or visit the <a href="/help">Help & Support</a> page.
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{{ url_for('download_documentation_pdf') }}" class="btn btn-lg btn-success">
+      ⬇️ Download This Manual as PDF
+    </a>
+  </div>
+</div>
+{% endblock %}

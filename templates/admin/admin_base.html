@@ -77,7 +77,7 @@
 
 <!-- Admin Header -->
 <div class="admin-header">
-  <h1>🔐 NHRC SOP Portal Admin Panel</h1>
+  <h3>🔐 NHRC SOP Portal Admin Panel</h3>
   <p>Manage users, SOPs, logs, settings, and more</p>
 </div>
 
@@ -85,7 +85,8 @@
 <div class="admin-navbar">
   <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a>
   <a href="{{ url_for('admin_manage_users') }}" class="{% if request.endpoint == 'admin_manage_users' %}active{% endif %}">Manage-Users</a>
-  <a href="{{ url_for('admin_logs') }}" class="{% if request.endpoint == 'admin_logs' %}active{% endif %}">Logs</a>
+  <a href="{{ url_for('admin_logs') }}" class="{% if request.endpoint == 'admin_logs' %}active{% endif %}">User-Logs</a>
+  <a href="{{ url_for('audit_log') }}" class="{% if request.endpoint == 'audit_log' %}active{% endif %}">Audit-Trail</a>
   <a href="{{ url_for('register') }}" class="{% if request.endpoint == 'register' %}active{% endif %}">Register-User</a>
   <a href="{{ url_for('admin_send_notification') }}" class="{% if request.endpoint == 'admin_send_notification' %}active{% endif %}">Notifications</a>
   <a href="{{ url_for('admin_api_keys') }}" class="{% if request.endpoint == 'admin_api_keys' %}active{% endif %}">API Keys</a>

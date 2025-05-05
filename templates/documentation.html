@@ -2,33 +2,200 @@
 {% block title %}Documentation | NHRC SOP Portal{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h1 class="mb-4">📜 NHRC SOP Portal Documentation</h1>
 
-  <div class="mb-4">
-    <h4>Overview</h4>
-    <p>This platform helps manage Standard Operating Procedures (SOPs), amendments, approvals, user management, and system settings securely and efficiently.</p>
+<!-- PDF Header (first page only) -->
+<div class="pdf-header text-center mb-4">
+  <h1 class="fw-bold text-primary">📘 NHRC SOP Portal Documentation</h1>
+</div>
+
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h1 class="fw-bold text-primary">📘 NHRC SOP Portal — Comprehensive Documentation</h1>
+    </a>
+
+{#        <a href="{{ url_for('static', filename='NHRC_SOP_Documentation.pdf') }}" class="btn btn-success" download>
+        📥 Download Documentation as PDF
+    </a>
+    <a href="{{ url_for('static', filename='NHRC_SOP_Documentation.docx') }}" class="btn btn-primary ms-2" download>
+        📥 Download Documentation as DOCX
+    </a>#}
   </div>
+  
 
-  <div class="mb-4">
-    <h4>Modules</h4>
-    <ul>
-      <li><strong>📂 Documents:</strong> View, filter, and download SOPs.</li>
-      <li><strong>📤 Upload SOP:</strong> Upload new SOPs into the system (admin or HOD roles).</li>
-      <li><strong>📊 Dashboard:</strong> View live statistics and document status.</li>
-      <li><strong>🛡️ Admin Panel:</strong> Manage users, API keys, settings, and system logs.</li>
-      <li><strong>✏️ Amendments:</strong> Raise and track amendment requests to existing SOPs.</li>
+  <!-- Table of Contents -->
+  <div class="card mb-5 shadow rounded">
+    <div class="card-header bg-primary text-white fw-semibold">
+      📚 Table of Contents
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><a href="#overview" class="text-decoration-none">🧭 Overview</a></li>
+      <li class="list-group-item"><a href="#roles" class="text-decoration-none">👥 User Roles & Permissions</a></li>
+      <li class="list-group-item"><a href="#workflow" class="text-decoration-none">📝 Step-by-Step Workflows</a></li>
+      <li class="list-group-item"><a href="#features" class="text-decoration-none">⚙️ Interactive Features</a></li>
+      <li class="list-group-item"><a href="#database" class="text-decoration-none">🗃️ Database Models</a></li>
+      <li class="list-group-item"><a href="#emails" class="text-decoration-none">📬 Email Notifications</a></li>
+      <li class="list-group-item"><a href="#api" class="text-decoration-none">🔑 API & Integration</a></li>
+      <li class="list-group-item"><a href="#security" class="text-decoration-none">🔐 Security & Access</a></li>
+      <li class="list-group-item"><a href="#export" class="text-decoration-none">💾 Backup & Export</a></li>
+      <li class="list-group-item"><a href="#troubleshooting" class="text-decoration-none">🛠️ Troubleshooting Guide</a></li>
+      <li class="list-group-item"><a href="#faq" class="text-decoration-none">❓ FAQs</a></li>
+      <li class="list-group-item"><a href="#support" class="text-decoration-none">🆘 Support</a></li>
     </ul>
   </div>
 
-  <div class="mb-4">
-    <h4>Access Roles</h4>
-    <p>Permissions are based on user roles: Admin, HOD, Staff. Each has specific actions they can perform.</p>
-  </div>
+  <!-- Overview -->
+  <section id="overview" class="mb-5">
+    <h4 class="text-primary fw-bold">🧭 Overview</h4>
+    <p class="text-muted">
+      The NHRC SOP Portal is a secure, role-based web platform designed to streamline the management of Standard Operating Procedures (SOPs), amendments, approvals, versioning, and user acknowledgment. It ensures document control, accountability, and compliance across research and operational teams.
+    </p>
+  </section>
 
-  <div class="mb-4">
-    <h4>Support</h4>
-    <p>For technical issues, contact <a href="mailto:{{ settings.admin_email }}">{{ settings.admin_email }}</a>.</p>
-  </div>
+  <!-- Roles -->
+  <section id="roles" class="mb-5">
+    <h4 class="text-primary fw-bold">👥 User Roles & Permissions</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Admin:</strong> Full system access, user management, approvals, API keys, and settings.</li>
+      <li class="list-group-item"><strong>Director:</strong> High-level view, reports, access to all SOPs and amendments (read-only).</li>
+      <li class="list-group-item"><strong>Head of Department (HOD):</strong> Upload, approve SOPs, manage amendments.</li>
+      <li class="list-group-item"><strong>Research Officer:</strong> Submit amendments, view assigned SOPs.</li>
+      <li class="list-group-item"><strong>Research Assistant:</strong> View and acknowledge assigned SOPs, submit amendments.</li>
+      <li class="list-group-item"><strong>Junior Staff / Monitor / Guest:</strong> View-only or assigned SOPs; no upload/approval rights.</li>
+    </ul>
+  </section>
+
+  <!-- Workflows -->
+  <section id="workflow" class="mb-5">
+    <h4 class="text-primary fw-bold">📝 Step-by-Step Workflows</h4>
+    <div class="accordion" id="workflowAccordion">
+      {% for step in [
+        ("1️⃣ User Login & Password Management", "Users log in at /login. New users receive a welcome email with a temporary password and are required to change it on first login. If credentials are lost, use /forgot-password to reset."),
+        ("2️⃣ Upload & Approve SOPs", "Admins or HODs upload SOPs via /upload. Uploaded SOPs are initially saved as drafts. HOD/Admins review and approve drafts from the document list, which updates the status and sends notifications."),
+        ("3️⃣ Assign SOPs to Users", "SOPs can be assigned to users or groups via /assign/<id>. Assigned users see SOPs under 'My Actions' and must acknowledge them, ensuring compliance."),
+        ("4️⃣ Acknowledge & Read SOPs", "Assigned users visit /sops or /documents, view the assigned SOP, and click the read/acknowledge button. The system logs the action in ReadLog and updates SOPAssignment records."),
+        ("5️⃣ Raise Amendments", "Users submit amendment requests via /amendments, specifying the section, details, suggestion, and severity. Submitted amendments go into draft or final mode for review."),
+        ("6️⃣ Review, Consensus & Close Amendments", "HOD/Admins manage amendments via /manage_amendment/<id>. They update details, reach consensus, optionally assign a new SOP version, and close amendments, which triggers email alerts."),
+        ("7️⃣ Track System Activity", "Admins and HODs can monitor all user actions via /audit-log. This includes uploads, approvals, deletions, logins, and amendments, supporting accountability and reporting.")
+      ] %}
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#step{{ loop.index }}">
+            {{ step[0] }}
+          </button>
+        </h2>
+        <div id="step{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" data-bs-parent="#workflowAccordion">
+          <div class="accordion-body text-muted">
+            {{ step[1] }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="mb-5">
+    <h4 class="text-primary fw-bold">⚙️ Interactive Features</h4>
+    <ul class="list-unstyled text-muted">
+      <li>✅ Real-time dashboard with SOP stats and amendment summaries</li>
+      <li>✅ Bulk upload, filtering, and advanced search</li>
+      <li>✅ Automatic audit logging for all actions</li>
+      <li>✅ Email and popup notifications</li>
+      <li>✅ User-level task tracking (“My Actions” widget)</li>
+      <li>✅ Excel export of audit logs and amendments</li>
+      <li>✅ API key generation for external integrations</li>
+    </ul>
+  </section>
+
+  <!-- Database -->
+  <section id="database" class="mb-5">
+    <h4 class="text-primary fw-bold">🗃️ Database Models</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>User:</strong> Stores account info, roles, and passwords</li>
+      <li class="list-group-item"><strong>SOP:</strong> Holds document details, version, status</li>
+      <li class="list-group-item"><strong>Amendment:</strong> Captures proposed changes to SOPs</li>
+      <li class="list-group-item"><strong>AuditLog:</strong> Logs all user/system actions</li>
+      <li class="list-group-item"><strong>ReadLog:</strong> Tracks when a user reads a SOP</li>
+      <li class="list-group-item"><strong>SOPAssignment:</strong> Links SOPs to specific users</li>
+      <li class="list-group-item"><strong>SupportTicket:</strong> Stores user help requests</li>
+      <li class="list-group-item"><strong>Notification:</strong> Saves in-app popups per user</li>
+    </ul>
+  </section>
+
+  <!-- Emails -->
+  <section id="emails" class="mb-5">
+    <h4 class="text-primary fw-bold">📬 Email Notifications</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">New user welcome email</li>
+      <li class="list-group-item">Password reset notification</li>
+      <li class="list-group-item">SOP assignment alert</li>
+      <li class="list-group-item">Amendment closure notification</li>
+      <li class="list-group-item">Support ticket reply</li>
+    </ul>
+  </section>
+
+  <!-- API -->
+  <section id="api" class="mb-5">
+    <h4 class="text-primary fw-bold">🔑 API & Integration</h4>
+    <p class="text-muted">
+      Admins can create and manage API keys at <code>/admin/api_keys</code> to integrate with external tools, allowing secure data exchange.
+    </p>
+  </section>
+
+  <!-- Security -->
+  <section id="security" class="mb-5">
+    <h4 class="text-primary fw-bold">🔐 Security & Access</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Login required for all modules</li>
+      <li class="list-group-item">Role-based access control on routes</li>
+      <li class="list-group-item">Password hashing and reset enforcement</li>
+      <li class="list-group-item">Audit trail for all sensitive actions</li>
+    </ul>
+  </section>
+
+  <!-- Export -->
+  <section id="export" class="mb-5">
+    <h4 class="text-primary fw-bold">💾 Backup & Export</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Audit logs exportable to Excel (<code>/audit-logs/download</code>)</li>
+      <li class="list-group-item">Amendment records exportable (<code>/amendments/export</code>)</li>
+      <li class="list-group-item">Database backups recommended at server level</li>
+    </ul>
+  </section>
+
+  <!-- Troubleshooting -->
+  <section id="troubleshooting" class="mb-5">
+    <h4 class="text-primary fw-bold">🛠️ Troubleshooting Guide</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Problem:</strong> Forgot password → <strong>Solution:</strong> Use “Forgot Password” on login page</li>
+      <li class="list-group-item"><strong>Problem:</strong> Cannot upload file → <strong>Solution:</strong> Ensure file is PDF/DOC/DOCX and under size limit</li>
+      <li class="list-group-item"><strong>Problem:</strong> No approval option visible → <strong>Solution:</strong> Check if logged in as Admin or HOD</li>
+      <li class="list-group-item"><strong>Problem:</strong> Missing notification → <strong>Solution:</strong> Check spam folder or contact admin</li>
+      <li class="list-group-item"><strong>Problem:</strong> Dashboard not loading → <strong>Solution:</strong> Clear browser cache, reload, or contact admin</li>
+    </ul>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="mb-5">
+    <h4 class="text-primary fw-bold">❓ Frequently Asked Questions</h4>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Q:</strong> Can I see older SOP versions?<br><strong>A:</strong> Yes, view them under version history on the SOP page.</li>
+      <li class="list-group-item"><strong>Q:</strong> Who receives amendment closure notifications?<br><strong>A:</strong> Admins, HODs, and stakeholders listed in the system.</li>
+      <li class="list-group-item"><strong>Q:</strong> How can I contact support?<br><strong>A:</strong> Submit a ticket via the Help page or email <a href="mailto:{{ settings.admin_email }}">{{ settings.admin_email }}</a>.</li>
+    </ul>
+  </section>
+
+  <!-- Support -->
+  <section id="support" class="mb-5">
+    <h4 class="text-primary fw-bold">🆘 Support</h4>
+    <p class="text-muted">
+      Need help? Contact <a href="mailto:{{ settings.admin_email }}">{{ settings.admin_email }}</a> or submit a support ticket via <a href="/help">/help</a>.
+    </p>
+  </section>
+</div>
+
+<!-- PDF Footer (last page only) -->
+<div class="pdf-footer text-center mt-4">
+  <p class="small text-muted">© {{ current_year }} NHRC SOP Portal — All Rights Reserved</p>
 </div>
 {% endblock %}

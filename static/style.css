@@ -36,7 +36,7 @@ ul li {
 /* -----------------------
 ✅ FORMS & INPUTS
 ------------------------ */
-form, ul {
+form, .custom-list {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -44,6 +44,7 @@ form, ul {
   margin-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
+
 
 input[type="file"],
 select,
@@ -213,14 +214,15 @@ footer a:hover {
 }
 
 /* -----------------------
-🏥 NHRC Header
+🏥 NHRC Header f0f4ff
 ------------------------ */
 .nhrc-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #f0f4ff;
+  background-color: #f5f5f5;
+  /* background-color: var(--primary-color); */
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
   z-index: 1000; /* keep it above everything */
@@ -291,11 +293,11 @@ footer a:hover {
 /* Full-width nav bar */
 .nav-wrapper {
   position: fixed;
-  top: 114px; /* below user bar */
+  top: 114px;
   left: 0;
   width: 100%;
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
+  background-color: var(--primary-color);  /* ✅ CHANGE TO primary-color */
+  /* border-bottom: 1px solid #ccc; */
   z-index: 998;
 }
 
@@ -651,7 +653,8 @@ input[type="checkbox"] {
 .top-tabs {
   width: 100%;
   background: #fdfdfd;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: none;  /* ← REMOVE shadow */
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); */
 }
 
 .top-tab-list {
@@ -666,7 +669,7 @@ input[type="checkbox"] {
   display: block;
   flex: 1;
   text-align: center;
-  border-right: 1px solid #eee;
+  border-right: 0px solid #eee;
   min-width: 150px;
   white-space: nowrap;
   box-sizing: border-box;
@@ -955,7 +958,7 @@ input[type="checkbox"] {
   /* Main container for the search box */
   .documents-search-box {
     background-color: #e7e9ef;   /* Light background for contrast */
-    padding: 20px 40px;          /* Internal spacing (top/bottom, left/right) */
+    padding: 10px 30px;          /* Internal spacing (top/bottom, left/right) */
     border-radius: 10px;         /* Rounded corners */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);  /* Subtle shadow */
     max-width: 700px;            /* Maximum width to keep layout tight */
@@ -1477,10 +1480,7 @@ body {
   min-height: 100vh;
 }
 
-main.content {
-  flex: 1;
-  padding-top: 140px; /* ✅ add spacing after your header/navbar */
-}
+
 
 
 
@@ -1593,4 +1593,403 @@ main.content {
 /* Send button hover */
 .btn-send:hover {
   background: #357ABD; /* 👈 Send button hover color */
+}
+
+
+.card.w-100 {
+  width: 100% !important;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.btn.w-100 {
+  width: 100%;
+}
+
+
+/* Make container-fluid full width */
+.container-fluid {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Make all cards inside forms full width */
+.card.w-100 {
+    width: 100% !important;
+    border-radius: 0; /* optional: remove rounded corners for edge-to-edge */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Remove max-width limits on form wrappers */
+form, ul, .manage-amendment-form {
+    max-width: 100% !important;
+}
+
+.amendment-form-container,
+.card.w-100 {
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.card.w-100 .card-body {
+    background-color: #ffffff;
+}
+
+.card.w-100 h5,
+.card.w-100 label {
+    color: #343a40;
+}
+
+.card.w-100 button {
+    font-weight: 600;
+}
+
+h2.text-center.mb-4.fw-bold.text-primary {
+    background: linear-gradient(90deg, #0d6efd, #6ea8fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.manage_amendment-page {
+    background-color: #f1f3f6;
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px 20px;
+}
+
+
+
+
+/* 🌟 Make top-tab navbar responsive */
+.navbar .navbar-toggler {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar .navbar-toggler-icon {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+  .navbar .navbar-toggler {
+    display: block;
+  }
+  .top-tab-list {
+    display: none;
+    flex-direction: column;
+    background-color: var(--primary-color);
+    width: 100%;
+  }
+  .top-tab-list.show {
+    display: flex;
+  }
+  .top-tab-list li {
+    border: none;
+  }
+  .top-tab-list li a {
+    color: white;
+    padding: 10px;
+  }
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover {
+  color: #ffc107 !important;
+}
+
+
+.navbar,
+.navbar-collapse {
+  background-color: var(--primary-color) !important;
+}
+
+.navbar-nav .nav-link {
+  color: white !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: #ffc107 !important; /* gold on hover / active */
+}
+
+/* Remove white background and rounded corners from collapsed navbar */
+.navbar-collapse {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.navbar-nav {
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+
+
+/* ✅ Reduce navbar height */
+.nav-wrapper {
+  height: 50px;  /* reduced from ~85px */
+  border-bottom: none;
+}
+
+.top-tab-list a {
+  padding: 10px 15px;  /* less vertical padding */
+  font-size: 0.95rem;
+}
+
+/* ✅ Shift nav items to the left */
+.top-tab-list {
+  justify-content: flex-start;
+  padding-left: 20px;  /* add some left margin */
+}
+
+/* ✅ Reduce body top padding to close gap below navbar */
+body {
+  padding-top: 140px;  /* was 200px → reduce by ~40px */
+}
+
+
+/* ✅ Optional: fine-tune content main area */
+/* main.content {
+  padding-top: 10px;  
+} */
+
+main.content {
+  flex: 1;
+  padding-top: 10px; /* ✅ add spacing after your header/navbar */
+}
+
+
+.navbar-nav {
+  margin-left: 0;
+  margin-right: 20px;
+  padding-left: 20px; 
+}
+
+
+.nav-wrapper, 
+.top-tabs, 
+.navbar, 
+.navbar-collapse {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.top-tabs {
+  background: var(--primary-color);
+  box-shadow: none;
+  border-bottom: none;
+}
+
+.top-tab-list, 
+.top-tab-list li, 
+.top-tab-list a {
+  margin-bottom: 0 !important;
+}
+
+
+.top-tab-list a.active,
+.top-tab-list li.active a {
+  background-color: #1a73e8 !important;
+  border-bottom: none !important;
+  color: white !important;
+}
+
+.navbar .container-fluid {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.navbar {
+  border: none !important;
+  height: 50px; /* reduce overall navbar height */
+}
+
+.navbar,
+.navbar .container-fluid,
+.navbar-nav,
+.navbar-nav li,
+.navbar-nav li a,
+.navbar-collapse {
+  border: none !important;
+  /* box-shadow: none !important; */
+}
+
+.navbar hr,
+.navbar-collapse hr,
+.container-fluid hr {
+  display: none !important;
+  border: none !important;
+}
+
+
+.navbar .container-fluid {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.navbar-nav .nav-link {
+  padding-top: 3px;
+  padding-bottom: 2px;
+  /*font-size: 0.9rem;  optional: slightly smaller text */
+}
+
+/* Stylish hamburger button */
+.navbar-toggler {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 6px;
+}
+
+.navbar-toggler-icon {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  display: block;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-toggler-icon::before,
+.navbar-toggler-icon::after {
+  content: '';
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-toggler-icon::before {
+  top: -8px;
+}
+
+.navbar-toggler-icon::after {
+  top: 8px;
+}
+
+/* When open: transform to X */
+.navbar-toggler.collapsed .navbar-toggler-icon {
+  background-color: transparent;
+}
+
+.navbar-toggler.collapsed .navbar-toggler-icon::before {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+.navbar-toggler.collapsed .navbar-toggler-icon::after {
+  transform: rotate(-45deg);
+  top: 0;
+}
+
+
+.admin-header {
+  background-color: #117a8b !important; /* deep blue background */
+  color: #ffffff;            /* white text */
+  padding: 10px 20px;        /* reduce top/bottom padding */
+  margin-top: 25px; /* ✅ pulls it upward */
+  text-align: center;
+  border-radius: 0px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.admin-header h3 {
+  margin: 0;
+  font-size: 1.2rem;         /* slightly smaller */
+  font-weight: 600;
+}
+
+.admin-header p {
+  margin: 2px 0 0;           /* tighten vertical space */
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+
+
+
+.no-background {
+  background: none !important;
+  padding: 0 !important;
+}
+
+.no-background form {
+  display: inline-block;
+  margin: 0;
+}
+
+.no-background button {
+  margin: 0px 0px;
+}
+
+
+.td-actions {
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.td-actions form {
+  display: inline-block;
+  margin: 0 0px;
+}
+
+.td-actions button {
+  margin: 2px 2px;
+}
+
+td.text-center.bg-transparent {
+  background-color: transparent !important;
+}
+
+.actions-cell form {
+  display: inline;
+  margin: 0 2px;
+}
+
+.actions-cell button {
+  padding: 2px 6px;
+  font-size: 0.8rem;
+}
+
+
+.pdf-header, .pdf-footer {
+  display: none;
+}
+
+@media print {
+  .pdf-header {
+    display: block;
+    page-break-after: avoid;
+  }
+  .pdf-footer {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    page-break-before: avoid;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+  }
 }

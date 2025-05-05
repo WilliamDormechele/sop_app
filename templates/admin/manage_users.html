@@ -36,25 +36,25 @@
   <div class="row mt-3">
     <div class="col-md-3">
       <div class="admin-card">
-        <h6>Total Users</h6>
+        <h6>👥 Total Users</h6>
         <h3>{{ total_users }}</h3>
       </div>
     </div>
     <div class="col-md-3">
       <div class="admin-card">
-        <h6>Active Users</h6>
+        <h6>✅ Active Users 👤</h6>  
         <h3>{{ active_users }}</h3>
       </div>
     </div>
     <div class="col-md-3">
       <div class="admin-card">
-        <h6>Blocked Users</h6>
+        <h6>🚫 Blocked Users 👤</h6>
         <h3>{{ blocked_users }}</h3>
       </div>
     </div>
     <div class="col-md-3">
       <div class="admin-card">
-        <h6>Suspended Users</h6>
+        <h6>⚠️ Suspended Users 👤</h6>
         <h3>{{ suspended_users }}</h3>
       </div>
     </div>
@@ -64,7 +64,7 @@
 <!-- Bulk Actions -->
 <form id="bulkActionForm" method="POST" action="{{ url_for('bulk_action_users') }}">
   <div class="mb-3">
-    <button type="submit" name="action" value="delete" class="btn btn-danger">Bulk Delete</button>
+    <button type="submit" name="action" value="delete" class="btn btn-danger">Bulk Delete (Commit)</button>
     <button type="submit" name="action" value="reset" class="btn btn-warning">Bulk Reset Password</button>
   </div>
 

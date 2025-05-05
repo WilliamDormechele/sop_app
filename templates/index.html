@@ -23,7 +23,7 @@
             <li>📂 Browse Specific SOPs relevant to your project/department</li>
             <li>🔍 Search/Filter relevant SOPs</li>
             <li>📥 Download SOPs relevant to your project/department</li>
-            {% if session.get('role') in ['admin', 'hod'] %}
+            {% if session.get('role') in ['Admin', 'Head of Department', 'Director'] %}
               <li>📤 Upload new SOPs with categories and subcategories</li>
             {% endif %}
             <li>📝 Make Request for SOPs Amendments</li>
@@ -42,14 +42,18 @@
         <div class="card-body">
           <h3 class="card-title text-primary">🔗 Quick Links:</h3>
           <ul class="quick-links">
+            <li>📖 <a href="{{ url_for('user_manual') }}">User Manual</a></li>
+            <li>📘 <a href="{{ url_for('training_manual') }}"> Training Manual</a></li>
             <li>📄 <a href="{{ url_for('list_sops') }}">View SOPs</a></li>
-            {% if session.get('role') in ['admin', 'hod'] %}
+            {% if session.get('role') in ['Admin', 'Head of Department', 'Director'] %}
               <li>📤 <a href="{{ url_for('upload_file') }}">Upload SOP</a></li>
             {% endif %}
             <li>📊 <a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li>🪟 <a href="{{ url_for('audit_log') }}">View Audit Logs</a></li>
-            <li>📥 <a href="{{ url_for('download_audit_logs') }}">Download 📝 Audit Logs</a></li>
+            <li>🪟 <a href="{{ url_for('audit_log') }}">View Audit Trail/Logs</a></li>
+            <li>⬇️ <a href="{{ url_for('download_audit_logs') }}">Download Audit Trail/Logs</a></li>
             <li>🔐 <a href="{{ url_for('change_password') }}">Change Password</a></li>
+            <li>🔑 <a href="{{ url_for('api_docs') }}">API Docs</a></li>
+            <li>❓ <a href="{{ url_for('faq') }}">FAQ</a></li>
           </ul>
         </div>
       </div>
@@ -58,10 +62,10 @@
   </div>
 
   <!-- Support Info -->
-  <div class="text-center mt-5 small text-muted">
+  {#<div class="text-center mt-5 small text-muted">
     For technical support, please contact 
     <a href="mailto:williamdormechele@navrongo-hrc.org" class="text-primary">williamdormechele@navrongo-hrc.org</a>
-  </div>
+  </div>#}
 
 </div>
 

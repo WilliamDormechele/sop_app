@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  
+  <!-- Bootstrap CSS and SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <!-- 🔷 Header with Logos and Titles -->
+<header class="nhrc-header">
+  <div class="header-row centered-header">
+    <!-- Left Logo -->
+    <div class="logo-container">
+      <img src="/static/logo_left.png" alt="Left Logo" class="header-logo">
+    </div>
+
+    <!-- Centered Title -->
+    <div class="header-text">
+      <h1>Navrongo Health Research Centre</h1>
+      <h3>Ghana Health Service</h3>
+    </div>
+
+    <!-- Right Logo -->
+    <div class="logo-container">
+      <img src="/static/logo_right.png" alt="Right Logo" class="header-logo">
+    </div>
+  </div>
+</header>
+
+
+
+  <!-- 🔐 Username/Logout Info -->
+  
+    <div class="user-bar">
+      Logged in as <strong>admin</strong> |
+      <a href="/logout">Logout</a>
+    </div>
+  
+
+<div class="user-bar">
+  <div class="logout-warning" id="logout-warning"></div>
+  <div class="user-info">
+    Logged in as <strong>admin</strong> |
+    <a href="/logout"><i class="fa-solid fa-right-from-bracket" style="color: #d32f2f;"></i> Logout</a>
+  </div>
+</div>
+
+
+    <!-- 🔐 Navigation Bar -->
+<div class="nav-wrapper">
+    <nav class="top-tabs">
+      <ul class="top-tab-list">
+<li class="">
+  <a href="/">
+    <i class="bi bi-house-fill home-icon"></i> Home
+  </a>
+</li>
+<li class="">
+  <a href="/documents">
+    <i class="bi bi-folder-fill documents-icon"></i> Documents
+  </a>
+</li>
+<li class="">
+  <a href="/sops">
+    <i class="bi bi-file-earmark-text sops-icon"></i> View SOPs
+  </a>
+</li>
+<li class="">
+  <a href="/upload">
+    <i class="bi bi-cloud-upload-fill upload-icon"></i> Upload SOP
+  </a>
+</li>
+
+<li class="active">
+  <a href="/dashboard">
+    <i class="bi bi-graph-up dashboard-icon"></i> Dashboard
+  </a>
+</li>
+
+<li class="">
+  <a href="/amendments">
+    <i class="amendment-icon"></i> ✏️Amendments
+    
+      <span class="badge bg-danger">1</span>
+    
+  </a>
+</li> 
+
+
+
+      </ul>
+    </nav>
+  </div>
+
+
+  <!-- ✅ Page Content Block -->
+<main class="content">
+  <div class="page-wrapper">
+    
+
+<!-- Filters -->
+<div class="container py-4">
+  <h2 class="mb-4 text-primary">📊 Dashboard</h2>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <select id="yearFilter" class="form-select">
+        <option value="">Select Year</option>
+        
+        <option value="2025">2025</option>
+        
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select id="monthFilter" class="form-select">
+        <option value="">Select Month</option>
+        
+        <option value="1">1</option>
+        
+        <option value="2">2</option>
+        
+        <option value="3">3</option>
+        
+        <option value="4">4</option>
+        
+        <option value="5">5</option>
+        
+        <option value="6">6</option>
+        
+        <option value="7">7</option>
+        
+        <option value="8">8</option>
+        
+        <option value="9">9</option>
+        
+        <option value="10">10</option>
+        
+        <option value="11">11</option>
+        
+        <option value="12">12</option>
+        
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select id="categoryFilter" class="form-select">
+        <option value="">Select Category</option>
+        
+        <option value="Admin">Admin</option>
+        
+        <option value="Csd">Csd</option>
+        
+        <option value="Dsd">Dsd</option>
+        
+        <option value="Finance">Finance</option>
+        
+        <option value="HR">HR</option>
+        
+        <option value="Lab">Lab</option>
+        
+        <option value="Safety">Safety</option>
+        
+        <option value="t">t</option>
+        
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select id="amendmentStatusFilter" class="form-select">
+        <option value="">Select Amendment Status</option>
+        <option value="open">Open</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Print & Download Buttons -->
+  <div class="d-flex justify-content-end gap-2 mb-4">
+    <button id="printDashboard" class="btn btn-outline-primary">🖨️ Print</button>
+    <button id="downloadDashboard" class="btn btn-outline-success">⬇️ Download</button>
+  </div>
+
+  <!-- Charts Area -->
+  <div class="row g-4" id="chartsArea" style="display:none;">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light"><strong>📅 SOP Uploads by Month</strong></div>
+        <div class="card-body"><canvas id="uploadsChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light"><strong>📄 Draft vs Final SOPs</strong></div>
+        <div class="card-body"><canvas id="draftFinalChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light"><strong>🛠️ Amendments Raised vs Closed</strong></div>
+        <div class="card-body"><canvas id="amendmentsChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light"><strong>📂 SOPs by Category</strong></div>
+        <div class="card-body"><canvas id="categoryChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Inline Styles for neat layout -->
+<style>
+#chartsArea .card {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+#chartsArea .card-body {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#chartsArea canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+</style>
+
+<!-- Chart.js + JS Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let uploadsChart, draftFinalChart, amendmentsChart, categoryChart;
+
+// Load data initially
+window.addEventListener('DOMContentLoaded', () => fetchDashboardData());
+
+// Filters
+document.querySelectorAll('#yearFilter, #monthFilter, #categoryFilter, #amendmentStatusFilter')
+.forEach(select => select.addEventListener('change', fetchDashboardData));
+
+// Print
+document.getElementById('printDashboard').addEventListener('click', () => {
+  window.print();
+});
+
+// Download
+document.getElementById('downloadDashboard').addEventListener('click', () => {
+  const link = document.createElement('a');
+  link.href = window.location.href;
+  link.download = 'dashboard_report.pdf';
+  link.click();
+});
+
+function fetchDashboardData() {
+  const year = document.getElementById('yearFilter').value;
+  const month = document.getElementById('monthFilter').value;
+  const category = document.getElementById('categoryFilter').value;
+  const amendmentStatus = document.getElementById('amendmentStatusFilter').value;
+
+  fetch(`/dashboard_data?year=${year}&month=${month}&category=${category}&amendment_status=${amendmentStatus}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('chartsArea').style.display = 'flex';
+      renderCharts(data);
+    });
+}
+
+function renderCharts(data) {
+  // Uploads
+  const uploadsCtx = document.getElementById('uploadsChart').getContext('2d');
+  uploadsChart?.destroy();
+  uploadsChart = new Chart(uploadsCtx, {
+    type: 'bar',
+    data: {
+      labels: data.uploads_data.map(u => `Month ${u.month}`),
+      datasets: [{
+        label: 'SOPs Uploaded',
+        data: data.uploads_data.map(u => u.count),
+        backgroundColor: '#0d6efd'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1000 },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Draft vs Final
+  const draftCtx = document.getElementById('draftFinalChart').getContext('2d');
+  draftFinalChart?.destroy();
+  draftFinalChart = new Chart(draftCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Draft', 'Final'],
+      datasets: [{
+        data: [data.draft_count, data.final_count],
+        backgroundColor: ['#fbbc04', '#34a853']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1000 }
+    }
+  });
+
+  // Amendments
+  const amendCtx = document.getElementById('amendmentsChart').getContext('2d');
+  amendmentsChart?.destroy();
+  amendmentsChart = new Chart(amendCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Raised', 'Closed'],
+      datasets: [{
+        data: [data.amendments_raised, data.amendments_closed],
+        backgroundColor: ['#6610f2', '#198754']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1000 },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // SOPs by Category
+  const catCtx = document.getElementById('categoryChart').getContext('2d');
+  categoryChart?.destroy();
+  categoryChart = new Chart(catCtx, {
+    type: 'pie',
+    data: {
+      labels: data.category_labels,
+      datasets: [{
+        data: data.category_values,
+        backgroundColor: generateColors(data.category_labels.length)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1000 }
+    }
+  });
+}
+
+function generateColors(count) {
+  const colors = ['#0dcaf0', '#fd7e14', '#198754', '#6f42c1', '#ffc107', '#dc3545', '#20c997', '#6610f2'];
+  let output = [];
+  for (let i = 0; i < count; i++) {
+    output.push(colors[i % colors.length]);
+  }
+  return output;
+}
+</script>
+
+
+  </div>
+</main>
+
+
+  <!-- 🔻 Footer -->
+  <footer class="footer">
+    <p>© 2025 Navrongo Health Research Centre | Developed by William Dormechele</p>
+  </footer>
+
+<script src="/static/js/script.js"></script>
+
+
+  
+
+
+
+<!-- ✅ Bootstrap JS Bundle and SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</body>
+</html>

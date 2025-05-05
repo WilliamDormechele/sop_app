@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Professional Training Manual | NHRC SOP Portal{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5" style="max-width: 900px; font-family: 'Inter', 'Segoe UI', sans-serif; color: #2c3e50;">
+
+  <h1 class="text-center mb-4" style="font-size: 2.8em; font-weight: 700;">
+    👩‍🏫 NHRC SOP Portal
+    <div style="font-size: 0.6em; font-weight: 400; color: #7f8c8d;">Professional Training Manual</div>
+  </h1>
+
+  <p class="lead text-center" style="font-size: 1.2em; max-width: 700px; margin: 0 auto;">
+    Welcome to the NHRC SOP Portal! This sleek and user-friendly guide provides clear instructions, expert tips, and best practices to help you navigate and master the system with ease.
+  </p>
+
+  <hr style="border-top: 3px solid #3498db; margin: 40px 0;">
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">1️⃣ Introduction</h3>
+    <p>
+      The NHRC SOP Portal is your all-in-one solution for managing Standard Operating Procedures, amendments, user activities, approvals, notifications, and audit logs — designed for streamlined operations and full transparency.
+    </p>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">2️⃣ Logging In and Changing Password</h3>
+    <ul style="line-height: 1.8;">
+      <li>Go to <code>/login</code>.</li>
+      <li>Enter your <strong>username</strong> and <strong>password</strong>.</li>
+      <li>If logging in for the first time or after a reset, follow the prompt to set a new password.</li>
+      <li>Forgot your password? Click <strong>“Forgot Password”</strong> and follow the reset instructions.</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">3️⃣ Navigating the Dashboard</h3>
+    <ul style="line-height: 1.8;">
+      <li>View SOP statistics, recent amendments, and key alerts on the dashboard.</li>
+      <li>Use the top navigation bar to access Documents, Amendments, Upload, Admin Panel, and Help Center.</li>
+      <li>Check the dashboard regularly for pending tasks or announcements.</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">4️⃣ Browsing and Acknowledging SOPs</h3>
+    <ul style="line-height: 1.8;">
+      <li>Go to <code>/documents</code> to browse SOPs.</li>
+      <li>Filter by <em>status</em>, <em>category</em>, <em>owner</em>, or <em>keywords</em> for precise search results.</li>
+      <li>Click 📥 to download or ✅ to mark an SOP as read and acknowledged.</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">5️⃣ Uploading and Approving SOPs (Admin / HOD)</h3>
+    <ul style="line-height: 1.8;">
+      <li>Go to <code>/upload</code>, choose the file, and assign the category/subcategory.</li>
+      <li>Review and approve or delete drafts under <code>/sops</code>.</li>
+      <li>Ensure SOPs are approved before they become visible to users.</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">6️⃣ Managing Amendments</h3>
+    <ul style="line-height: 1.8;">
+      <li>Submit amendment requests via <code>/amendments</code> by selecting the SOP, indicating the section, describing the issue, and suggesting a fix.</li>
+      <li>Admins/HODs handle reviews, updates, and closures with full audit tracking.</li>
+      <li>Email alerts keep all stakeholders informed of progress.</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #2980b9; font-weight: 600;">7️⃣ Submitting Support Tickets</h3>
+    <ul style="line-height: 1.8;">
+      <li>Access the Help Center at <code>/help</code> to submit a ticket.</li>
+      <li>Provide your name, email, subject, and detailed description.</li>
+      <li>Track the ticket status using the provided ticket ID.</li>
+      <li>Admins manage tickets at <code>/admin/support-tickets</code>.</li>
+    </ul>
+  </section>
+
+  <section style="margin-bottom: 40px;">
+    <h3 style="color: #27ae60; font-weight: 600;">✅ Best Practices</h3>
+    <ul style="line-height: 1.8;">
+      <li>Use a strong, unique password and update it regularly.</li>
+      <li>Mark SOPs as read promptly to stay compliant.</li>
+      <li>Submit amendments proactively to improve documentation.</li>
+      <li>Monitor notifications frequently to stay on top of updates.</li>
+      <li>Always log out on shared or public devices.</li>
+    </ul>
+  </section>
+
+  <div style="background: #ecf0f1; padding: 20px; border-left: 5px solid #3498db; border-radius: 8px; margin-bottom: 40px;">
+    <h4 style="margin-bottom: 10px; font-weight: 600;">📧 Need Help?</h4>
+    <p style="margin: 0;">
+      Contact the administrator at <a href="mailto:{{ settings.admin_email }}" style="color: #2980b9;">{{ settings.admin_email }}</a>
+      or visit the <a href="/help" style="color: #2980b9;">Help Center</a> to submit a ticket.
+    </p>
+  </div>
+
+  <div class="text-center">
+    <a href="{{ url_for('download_training_manual_pdf') }}" 
+       class="btn btn-lg" 
+       style="background-color: #3498db; color: white; font-size: 1.1em; padding: 12px 30px; border-radius: 30px; text-decoration: none;">
+      ⬇️ Download This Manual as PDF
+    </a>
+  </div>
+
+</div>
+{% endblock %}

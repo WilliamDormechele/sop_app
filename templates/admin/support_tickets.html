@@ -11,13 +11,14 @@
     </div>
   </div>
 
+  {#
   <div class="mb-3">
-    <select id="status-filter" class="form-select form-select-sm" style="width:200px;" onchange="filterTickets()">
-      <option value="">All Tickets</option>
-      <option value="Open">Open ({{ open_count }})</option>
-      <option value="Closed">Closed ({{ closed_count }})</option>
-    </select>
-  </div>
+  <select id="status-filter" class="form-select form-select-sm" style="width:200px;" onchange="filterTickets()">
+    <option value="" {% if current_status == 'All' %}selected{% endif %}>All Tickets</option>
+    <option value="Open" {% if current_status == 'Open' %}selected{% endif %}>Open ({{ open_count }})</option>
+    <option value="Closed / Resolved" {% if current_status == 'Closed' %}selected{% endif %}>Closed / Resolved ({{ closed_count }})</option>
+  </select>
+  </div> #}
 
   <div class="table-responsive">
     <table class="table table-bordered table-hover align-middle" id="tickets-table">
@@ -45,16 +46,18 @@
             {% endif %}
           </td>
           <td>{{ ticket.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
-          <td class="text-center">
 
-            <form action="{{ url_for('reply_ticket_page', ticket_id=ticket.id) }}" method="GET" style="display:inline;">
-            <button type="submit" class="btn btn-primary btn-sm mb-1">✉️ Reply</button>
-            </form>
+<td class="text-center align-middle actions-cell">
+  <form action="{{ url_for('reply_ticket_page', ticket_id=ticket.id) }}" method="GET" style="display:inline-block; margin:0 2px;">
+    <button type="submit" class="btn btn-primary btn-sm">✉️ Reply</button>
+  </form>
+  <form action="{{ url_for('delete_support_ticket', ticket_id=ticket.id) }}" method="POST" style="display:inline-block; margin:0 2px;" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+    <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+  </form>
+</td>
 
-            <form action="{{ url_for('delete_support_ticket', ticket_id=ticket.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
-              <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
-            </form>
-          </td>
+
+
         </tr>
         {% endfor %}
       </tbody>
@@ -134,13 +137,22 @@ function refreshTickets() {
   location.reload();
 }
 
+
 function filterTickets() {
   const status = document.getElementById('status-filter').value;
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+
   if (status) {
-    window.location.href = `?status=${status}`;
+    params.set('status', status);
   } else {
-    window.location.href = window.location.pathname;
+    params.delete('status');
   }
+
+  params.delete('page');  // reset to first page when filtering
+
+  window.location.href = url.pathname + '?' + params.toString();
 }
+
 </script>
 {% endblock %}

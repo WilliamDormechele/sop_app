@@ -2,126 +2,156 @@
 {% block title %}Amendments{% endblock %}
 {% block content %}
 
-<div class="container py-4">
+<style>
+.container-fluid {
+  padding: 0 1rem;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: visible;        /* no horizontal scroll */
+  padding-left: 15px;         /* left gap */
+  padding-right: 15px;        /* right gap */
+}
+
+.table-responsive > table {
+  width: 100%;               /* full width inside wrapper */
+  max-width: 100%;
+  table-layout: auto;
+  white-space: normal;
+}
+
+/* Modal table container */
+#amendmentTableArea {
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow-x: auto;  /* keep horizontal scroll just in case on very small screens */
+}
+
+/* Modal table */
+#amendmentDetailsTable {
+  width: 100%;
+  max-width: 100%;
+  table-layout: auto;
+  white-space: normal;  /* allow text to wrap */
+}
+
+/* Optional: Make table cells wrap and align nicely */
+#amendmentDetailsTable td, 
+#amendmentDetailsTable th {
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+.reduced-width {
+  max-width: 98%;
+  margin: 0 auto;
+}
+
+</style>
+
+
+
+<div class="container-fluid py-4">
+   <div class="table-responsive">
+  {#<table class="table table-striped table-hover align-middle mb-0">#}
   <h2 class="mb-4 text-primary text-center">📝 Manage SOP Amendments</h2>
 
-{% if session['role'] in ['admin', 'hod'] %}
-<div class="text-end mb-3">
-  <a href="{{ url_for('amendments_page') }}?manage=true" class="btn btn-outline-primary">
-    🛠️ Go to Manage Amendments
-  </a>
-</div>
-{% endif %}
+  <div class="d-flex justify-content-end mb-3 pe-3">
+    {% if session['role'] in ['Admin', 'Head of Department'] %}
+    <a href="{{ url_for('amendments_page') }}?manage=true" class="btn btn-outline-primary me-2">
+      🛠️ Go to Manage Amendments
+    </a>
+    {% endif %}
+    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#amendmentDetailsModal">
+      📋 View Amendment Details
+    </button>
+  </div>
 
-
-<!-- View Amendment Details Button (Everyone) -->
-<div class="text-end mb-3">
-  <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#amendmentDetailsModal">
-    📋 View Amendment Details
-  </button>
-</div>
-
-<!-- Amendment Details Modal -->
-<div class="modal fade" id="amendmentDetailsModal" tabindex="-1" aria-labelledby="amendmentDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="amendmentDetailsModalLabel">📋 All Amendment Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Print Button -->
-        <!-- Print & Download Buttons -->
-        <div class="text-end mb-2 d-flex justify-content-end gap-2">
-          <button class="btn btn-sm btn-success" onclick="printAmendmentTable()">🖨️ Print</button>
-          <button class="btn btn-sm btn-primary" onclick="downloadAmendmentExcel()">⬇️ Download Excel</button>
+  <!-- Amendment Details Modal -->
+  <div class="modal fade" id="amendmentDetailsModal" tabindex="-1" aria-labelledby="amendmentDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="amendmentDetailsModalLabel">📋 All Amendment Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <div class="text-end mb-2 d-flex justify-content-end gap-2">
+            <button class="btn btn-sm btn-success" onclick="printAmendmentTable()">🖨️ Print</button>
+            <button class="btn btn-sm btn-primary" onclick="downloadAmendmentExcel()">⬇️ Download Excel</button>
+          </div>
 
-        
-        <div id="amendmentTableArea">
-          <table class="table table-striped table-bordered">
-            <thead class="table-light">
-              <tr>
-                <th>SOP</th>
-                <th>Section</th>
-                <th>Original Details</th>
-                <th>Amended Details</th>
-                <th>Severity</th>
-                <th>Version</th>
-                <th>Amended By</th>
-                <th>Date</th>
-                <th>Amended</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {% for amendment in amendments if amendment.update_details %}
-              <tr>
-                <td>{{ amendment.sop.filename if amendment.sop else 'N/A' }}</td>
-                <td>{{ amendment.sop_section }}</td>
-                <td>{{ amendment.details }}</td>
-                <td>{{ amendment.update_details }}</td>
-                <td>{{ amendment.severity }}</td>
-                <td>{{ amendment.new_version or '—' }}</td>
-                <td>{{ amendment.updated_by or '—' }}</td>
-                <td>{{ amendment.update_date.strftime('%Y-%m-%d') if amendment.update_date else '—' }}</td>
-                <td>
-                  {% if amendment.consensus_reached %}
-                    ✅
-                  {% else %}
-                    ❌
-                  {% endif %}
-                </td>
-              </tr>
-              {% else %}
-              <tr><td colspan="9" class="text-center text-muted">No reviewed amendments yet.</td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          <div id="amendmentTableArea">
+            <table id="amendmentDetailsTable" class="table table-striped table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>SOP</th>
+                  <th>Section</th>
+                  <th>Original Details</th>
+                  <th>Amended Details</th>
+                  <th>Severity</th>
+                  <th>Version</th>
+                  <th>Amended By</th>
+                  <th>Date</th>
+                  <th>Amended</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for amendment in amendments if amendment.update_details %}
+                <tr>
+                  <td>{{ amendment.sop.filename if amendment.sop else 'N/A' }}</td>
+                  <td>{{ amendment.sop_section }}</td>
+                  <td>{{ amendment.details }}</td>
+                  <td>{{ amendment.update_details }}</td>
+                  <td>{{ amendment.severity }}</td>
+                  <td>{{ amendment.new_version or '—' }}</td>
+                  <td>{{ amendment.updated_by or '—' }}</td>
+                  <td>{{ amendment.update_date.strftime('%Y-%m-%d') if amendment.update_date else '—' }}</td>
+                  <td>{% if amendment.consensus_reached %}✅{% else %}❌{% endif %}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="9" class="text-center text-muted">No reviewed amendments yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-function printAmendmentTable() {
-  var printContents = document.getElementById('amendmentTableArea').innerHTML;
-  var originalContents = document.body.innerHTML;
-  document.body.innerHTML = printContents;
-  window.print();
-  document.body.innerHTML = originalContents;
-  location.reload();
-}
-</script>
+  <script>
+  function printAmendmentTable() {
+    var printContents = document.getElementById('amendmentTableArea').innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
+  }
+  </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-<script>
-function downloadAmendmentExcel() {
-  var table = document.querySelector('#amendmentTableArea table'); // 📋 Amendment page
-  var wb = XLSX.utils.table_to_book(table, {sheet:"Amendments"});
-  XLSX.writeFile(wb, `amendments_${new Date().toISOString().slice(0,10)}.xlsx`);
-}
-
-function downloadManageAmendmentExcel() {
-  var table = document.querySelector('#manageAmendmentTableArea table'); // 🛠️ Manage Amendment page
-  var wb = XLSX.utils.table_to_book(table, {sheet:"Manage Amendments"});
-  XLSX.writeFile(wb, `manage_amendments_${new Date().toISOString().slice(0,10)}.xlsx`);
-}
-</script>
-
+  <script>
+  function downloadAmendmentExcel() {
+    var table = document.querySelector('#amendmentDetailsTable');
+    var wb = XLSX.utils.table_to_book(table, {sheet:"Amendments"});
+    XLSX.writeFile(wb, `amendments_${new Date().toISOString().slice(0,10)}.xlsx`);
+  }
+  </script>
 
   <!-- ✏️ Raise Amendment Section -->
   <div class="card shadow-sm mb-5">
     <div class="card-header bg-light">
-      <strong>Stage 1: Raise New Amendment</strong>
+      <strong>Stage 1: Raise New Amendment Request</strong>
     </div>
     <div class="card-body">
       <form method="post">
         <div class="row g-3">
           <div class="col-md-6">
-            <label class="form-label">SOP</label>
+            <label class="form-label">SOP<span class="text-danger">*</span></label>
             <select name="sop_id" class="form-select" required>
               {% for sop in sops %}
                 <option value="{{ sop.id }}">{{ sop.filename }}</option>
@@ -129,34 +159,34 @@ function downloadManageAmendmentExcel() {
             </select>
           </div>
           <div class="col-md-6">
-            <label class="form-label">Section</label>
+            <label class="form-label">SOP Section<span class="text-danger">*</span></label>
             <input type="text" name="sop_section" class="form-control" required>
           </div>
           <div class="col-md-6">
-            <label class="form-label">Details</label>
+            <label class="form-label">SOP Issues/Query Details<span class="text-danger">*</span></label>
             <textarea name="details" class="form-control" rows="2" required></textarea>
           </div>
           <div class="col-md-6">
-            <label class="form-label">Suggested Amendment</label>
-            <textarea name="suggestion" class="form-control" rows="2"></textarea>
+            <label class="form-label">Suggested Amendment<span class="text-danger">*</span></label>
+            <textarea name="suggestion" class="form-control" rows="2" required></textarea>
           </div>
           <div class="col-md-4">
-            <label class="form-label">Severity</label>
-            <select name="severity" class="form-select">
+            <label class="form-label">Severity<span class="text-danger">*</span></label>
+            <select name="severity" class="form-select" required>
               {% for level in ['Any','Critical','High','Medium','Low','Major','Minor','Query','Very High','Very Low'] %}
                 <option value="{{ level }}">{{ level }}</option>
               {% endfor %}
             </select>
           </div>
           <div class="col-md-4">
-            <label class="form-label">Status</label>
-            <select name="status" class="form-select">
+            <label class="form-label">Status<span class="text-danger">*</span></label>
+            <select name="status" class="form-select" required>
               <option value="draft">Draft</option>
               <option value="final">Final</option>
             </select>
           </div>
           <div class="col-md-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-success w-100">Submit Amendment</button>
+            <button type="submit" class="btn btn-success w-100">Submit Amendment Request</button>
           </div>
         </div>
       </form>
@@ -164,90 +194,89 @@ function downloadManageAmendmentExcel() {
   </div>
 
   <!-- 📋 All Amendments Table -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
-      <h5 class="mb-0">📑 All Raised Amendments</h5>
-      <a href="{{ url_for('export_amendments') }}" class="btn btn-outline-light btn-sm">⬇️ Export Excel</a>
-    </div>
 
-    <div class="table-responsive">
-      <table class="table table-striped table-hover align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>SOP</th>
-            <th>Section</th>
-            <th>ReqBy</th>
-            <th>Severity</th>
-            <th>Status</th>
-            <th>DateReq</th>
-            <th>Owner</th>
-            <th>Days</th>
-            <th>AmendedBy</th>
-            <th>Amended</th>
-            <th>Version</th>
-            <th>Mode</th>
-            <th>Manage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in amendments %}
-          <tr>
-            <td>{{ a.sop.filename }}</td>
-            <td>{{ a.sop_section }}</td>
-            <td>{{ a.raised_by }}</td>
-            <td>{{ a.severity }}</td>
-            <td>
-              <span class="badge bg-{{ 'secondary' if a.status == 'draft' else 'success' }}">
-                {{ a.status.capitalize() }}
-              </span>
-            </td>
-            <td>{{ a.date_raised.strftime('%Y-%m-%d') }}</td>
-            <td>{{ a.owner }}</td>
-            <td>{{ (now - a.date_raised).days }}</td>
-            <td>
-              {% if a.updated_by %}
-                <strong>{{ a.updated_by }}</strong><br>
-                <small>{{ a.update_date.strftime('%Y-%m-%d') if a.update_date else '' }}</small>
-              {% else %}
-                <span class="text-muted">—</span>
-              {% endif %}
-            </td>
-            <td>
-              {% if a.consensus_reached %}
-                <span class="badge bg-success">✅ Yes</span>
-              {% else %}
-                <span class="badge bg-warning text-dark">❌ No</span>
-              {% endif %}
-            </td>
-            <td>{{ a.new_version or '—' }}</td>
-
-            <!-- Edit -->
-            <td>
-              {% if a.status == 'draft' and a.raised_by == session['username'] %}
-                <a href="{{ url_for('edit_amendment', amendment_id=a.id) }}" class="btn btn-sm btn-primary">Edit</a>
-              {% else %}
-                <span class="text-muted">—</span>
-              {% endif %}
-            </td>
-
-            <!-- Manage -->
-            <td>
-              {% if session['role'] in ['admin', 'hod'] or a.owner == session['username'] %}
-                <button onclick="confirmManage('{{ url_for('manage_amendment', amendment_id=a.id) }}')" class="btn btn-sm btn-warning">Manage</button>
-              {% else %}
-                <span class="text-muted">—</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<div class="reduced-width">
+  <div class="card-header d-flex justify-content-between align-items-center bg-secondary text-white mb-3">
+    <h5 class="mb-0">📑 All Raised Amendments</h5>
+    <a href="{{ url_for('export_amendments') }}" class="btn btn-outline-light btn-sm">⬇️ Export Excel</a>
   </div>
 </div>
 
-<!-- SweetAlert Confirm Manage -->
-<!-- SweetAlert Confirm Manage -->
+
+
+{# <div class="card shadow-sm mb-4">#}
+  <div class="table-responsive">
+    <table id="amendmentsTable" class="table table-striped table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>SOP</th>
+          <th>Section</th>
+          <th>ReqBy</th>
+          <th>Severity</th>
+          <th>Status</th>
+          <th>DateReq</th>
+          <th>Owner</th>
+          <th>Days</th>
+          <th>AmendedBy</th>
+          <th>Amended</th>
+          <th>Version</th>
+          <th>Mode</th>
+          <th>Manage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in amendments %}
+        <tr>
+          <td>{{ a.sop.filename }}</td>
+          <td>{{ a.sop_section }}</td>
+          <td>{{ a.raised_by }}</td>
+          <td>{{ a.severity }}</td>
+          <td>
+            <span class="badge bg-{{ 'secondary' if a.status == 'draft' else 'success' }}">
+              {{ a.status.capitalize() }}
+            </span>
+          </td>
+          <td>{{ a.date_raised.strftime('%Y-%m-%d') }}</td>
+          <td>{{ a.owner }}</td>
+          <td>{{ (now - a.date_raised).days }}</td>
+          <td>
+            {% if a.updated_by %}
+              <strong>{{ a.updated_by }}</strong><br>
+              <small>{{ a.update_date.strftime('%Y-%m-%d') if a.update_date else '' }}</small>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if a.consensus_reached %}
+              <span class="badge bg-success">✅ Yes</span>
+            {% else %}
+              <span class="badge bg-warning text-dark">❌ No</span>
+            {% endif %}
+          </td>
+          <td>{{ a.new_version or '—' }}</td>
+          <td>
+            {% if a.status == 'draft' and a.raised_by == session['username'] %}
+              <a href="{{ url_for('edit_amendment', amendment_id=a.id) }}" class="btn btn-sm btn-primary">Edit</a>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if session['role'] in ['Admin', 'Head of Department'] or a.owner == session['username'] %}
+              <button onclick="confirmManage('{{ url_for('manage_amendment', amendment_id=a.id) }}')" class="btn btn-sm btn-warning">Manage</button>
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{#</div>#}
+
 <script>
 function confirmManage(url) {
   Swal.fire({
@@ -261,12 +290,32 @@ function confirmManage(url) {
     cancelButtonText: 'Cancel'
   }).then((result) => {
     if (result.isConfirmed) {
-      // Append ?tab=stage2 to the URL correctly
       const separator = url.includes('?') ? '&' : '?';
       window.location.href = url + separator + 'tab=stage2';
     }
   });
 }
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#amendmentsTable').DataTable({
+        paging: true,
+        ordering: true,
+        info: true,
+        autoWidth: false,
+        order: [],
+        columnDefs: [{ orderable: false, targets: [12] }]
+    });
+
+    $('#amendmentDetailsTable').DataTable({
+        paging: true,
+        ordering: true,
+        info: true,
+        autoWidth: false,
+        order: []
+    });
+});
 </script>
 
 {% endblock %}
