@@ -109,9 +109,12 @@
                   <td>{{ amendment.updated_by or '—' }}</td>
                   <td>{{ amendment.update_date.strftime('%Y-%m-%d') if amendment.update_date else '—' }}</td>
                   <td>{% if amendment.consensus_reached %}✅{% else %}❌{% endif %}</td>
-                </tr>
-                {% else %}
-                <tr><td colspan="9" class="text-center text-muted">No reviewed amendments yet.</td></tr>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="9" class="text-center text-muted">No reviewed amendments yet.</td>
+                  </tr>
+
                 {% endfor %}
               </tbody>
             </table>
@@ -308,13 +311,17 @@ $(document).ready(function() {
         columnDefs: [{ orderable: false, targets: [12] }]
     });
 
-    $('#amendmentDetailsTable').DataTable({
-        paging: true,
-        ordering: true,
-        info: true,
-        autoWidth: false,
-        order: []
-    });
+    if ($('#amendmentDetailsTable tbody tr').length > 1 || 
+        ($('#amendmentDetailsTable tbody tr').length === 1 && 
+        !$('#amendmentDetailsTable tbody tr td').first().attr('colspan'))) {
+        $('#amendmentDetailsTable').DataTable({
+            paging: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            order: []
+        });
+    }
 });
 </script>
 
